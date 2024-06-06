@@ -18,14 +18,14 @@ async function httpGet(url) {
     }
 }
 
+// Affichage de tous les projets //
+
 async function workList() {
     const works = await httpGet(url_works);
 
     node_gallery.innerHTML = "";
 
     works.forEach(element => {
-
-        console.log(element);
 
         const figcaption = document.createElement("figcaption");
         figcaption.textContent = element.title
@@ -43,14 +43,9 @@ async function workList() {
     })
 }
 
-async function categories() {
-    const categories = await httpGet(url_categories);
+workList();
 
-    categories.forEach(element => {
-
-        console.log(element);
-    })
-}
+// Filtrage des projets par catégories //
 
 async function filter(id) {
     const filter = await httpGet(url_works);
@@ -58,7 +53,11 @@ async function filter(id) {
     node_gallery.innerHTML = "";
     
     filter.forEach(element => {
-        if(element.categoryId === id) {
+        const category = element.category; 
+        const monSet = new Set();
+        monSet.add(category.name);
+        console.log(monSet);
+        if(monSet.has(id)) {
             const figcaption = document.createElement("figcaption");
             figcaption.textContent = element.title;
     
@@ -75,28 +74,27 @@ async function filter(id) {
     })
 }
 
-workList();
+
+
 
 const filterAll = document.querySelector(".all");
-console.log(filterAll);
 filterAll.addEventListener("click", function() {
     workList();
 });
 
 const filterObjects = document.querySelector(".objects");
-console.log(filterObjects);
 filterObjects.addEventListener("click", function() {
-    filter(1);
+    filter("Objets");
 });
 
 const filterAppartment = document.querySelector(".appartments");
-console.log(filterAppartment);
 filterAppartment.addEventListener("click", function() {
-    filter(2);
+    filter("Appartements");
 });
 
 const filterHotel = document.querySelector(".hotel");
-console.log(filterAll);
 filterHotel.addEventListener("click", function() {
-    filter(3);
+    filter("Hotels & restaurants");
 });
+
+
