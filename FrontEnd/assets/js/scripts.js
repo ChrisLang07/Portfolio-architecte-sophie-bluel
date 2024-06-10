@@ -6,7 +6,6 @@ const url_categories = "http://localhost:5678/api/categories";
 const node_gallery = document.querySelector("[rel=js-gallery]");
 const node_filters = document.querySelector("[rel=js-filters]");
 
-
 let works = [];
 let categories = [];
 
@@ -31,9 +30,7 @@ async function httpGet(url) {
 };
 
 /**
- * 
- * @param String url 
- * @param Object data, Data you nedd to pass to the request 
+data, Data you nedd to pass to the request 
  * @param Object headers, the HTTP request headers options 
  * 
  */
@@ -82,7 +79,38 @@ function createWork(work) {
 
     node_gallery.appendChild(figure);
 };
+
+/**
+ * 
+ * create the works of a category
+ * 
+ * @param category, the category of a work 
+ */
+
+function createFilters(category) {
+    
+    let li = document.createElement('li');
+    li.classList.add("filter-tag");
+    li.textContent = category.name;
+    li.dataset.category = category.id;
+    
+    li.addEventListener('click', event => {
         
+        let node = event.target;
+        console.log(node);
+        let categoryId = node.dataset.category;
+        let filteredWorks = works.filter(work => work.categoryId == categoryId);
+        categoryId == 0? fillGallery(works) : fillGallery(filteredWorks);
+        
+    });
+    
+    node_filters.appendChild(li);
+};
+
+function fillFilters(categories) {
+    categories.forEach(category => createFilters(category)); 
+    
+};      
 
 /**
  * 
@@ -97,8 +125,15 @@ function fillGallery(works) {
 };
 
 (async () => {
+    // Get data
     works = await httpGet(url_works);
+    categories = await httpGet(url_categories);
+    
+    createFilters({id: 0, name: 'Tous'});
+    fillFilters(categories);
+    
     fillGallery(works);
+    
 })();
 
 
