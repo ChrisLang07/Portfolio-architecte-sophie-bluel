@@ -3,6 +3,7 @@ const url_login = "http://localhost:5678/api/users/login";
 let form = document.querySelector('form');
 let email = document.querySelector('email');
 let password = document.querySelector('password');
+const loginState = document.querySelector("[rel=js-status]");
 
 /**
  * Make a HTTP POST Request and return an array
@@ -27,17 +28,41 @@ async function httpPost(url, data, headers) {
 };
 
 
-async function login(url, data, headers) {
-    const login = await httpPost(url, data, headers);
-    console.log(login);
-    if(login.error) {
+function accessAuth(login, storage) {
+    if (login.error) {
         alert("Wrong Email and/or Password");
+        storage.clear();
     } else {
-        let storage = window.localStorage;
-        storage.setItem("token", login.token);       
-        window.location = "index.html";
-    }
+        storeToken(login, storage);
+    };
+};
 
+function storeToken(login, storage) {
+    storage.setItem("token", login.token);
+};
+
+function accessMainPage(storage) {
+    if (storage.token != undefined) {
+        window.location = "index.html";
+    };
+};
+
+function loginStatus(storage) {
+    if (storage.token !== undefined) {
+        loginState.textContent = "logout";
+    };
+};
+
+
+
+async function login(url, data, headers) {
+    // Post data
+    const login = await httpPost(url, data, headers);
+    const storage = sessionStorage;
+
+    accessAuth(login, storage);
+    accessMainPage(storage);
+    
 };
 
 form.addEventListener("submit", event => {
@@ -49,12 +74,29 @@ form.addEventListener("submit", event => {
         email: nodeEmail.value,
         password: nodePassword.value
     });
-    
-    let headers = {"Content-Type": "application/json",};
-    
+
+    let headers = { "Content-Type": "application/json", };
+
     login(url_login, data, headers);
+});
+
+loginStatus(sessionStorage);
+
+
+loginState.addEventListener('click', () => {
+    sessionStorage.clear();
+    window.location = "login.html";
+    
     
 });
+
+
+
+
+
+
+
+
 
 
 
