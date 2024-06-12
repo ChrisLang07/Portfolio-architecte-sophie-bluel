@@ -1,0 +1,70 @@
+// connection aux ressources API //
+
+const url_login = "http://localhost:5678/api/users/login";
+
+async function httpPost(url, data, headers) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data,
+            headers: headers
+        });
+        return await response.json();
+    }
+    catch (error) {
+        alert("HTTP Error : " + response.status)
+        return [];
+    }
+};
+
+let form = document.querySelector('form');
+let email = document.getElementById('email');
+let password = document.getElementById('password');
+let loginStatus = document.querySelector("[rel=js-status]");
+
+
+        
+
+
+
+form.addEventListener('submit', event => {
+    event.preventDefault();
+    let nodeEmail = event.target.email;
+    let nodePassword = event.target.password;
+    let data = JSON.stringify({
+        email: nodeEmail.value,
+        password: nodePassword.value
+    });
+    
+    let headers = {"Content-Type": "application/json",};
+    
+
+    (async () => {
+        
+        const login = await httpPost(url_login, data, headers);
+        
+        if(login.error) {
+            alert("Wrong Email and/or Password");
+        } else {
+            console.log(login);
+            let storage = window.localStorage;
+            storage.setItem("token", login.token);       
+            window.location = "index.html";
+            console.log(storage);
+        }
+    })();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+

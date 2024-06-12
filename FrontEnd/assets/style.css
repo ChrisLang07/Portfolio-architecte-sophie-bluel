@@ -98,6 +98,13 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+nav a {
+	font-size: 1.2em;
+	text-decoration: none;
+	color:black;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -278,7 +285,7 @@ footer nav ul {
 	border-radius: 60px;
 }
 
-.pwd a {
+.forgotten-pwd a {
 	font-size: 0.9rem;
 	font-weight: 500;
 	color: rgba(61, 61, 61, 1)
