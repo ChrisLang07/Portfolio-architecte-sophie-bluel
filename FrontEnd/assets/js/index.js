@@ -29,11 +29,10 @@ async function httpGet(url) {
  * Make a HTTP POST Request and return an array
  * 
  * @param String url 
- * @param Object data, Data you need to pass to the request
+ * @param Object data, Data you need to pass the request
  * @param Object headers, The HTTP request headers options
  */
-async function httpPost(url, data, headers)
-{
+async function httpPost(url, data, headers) {
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -51,8 +50,7 @@ async function httpPost(url, data, headers)
 /**
  * Reset the .gallery elements
  */
-function resetGallery()
-{
+function resetGallery() {
     node_gallery.innerHTML = "";
 }
 
@@ -61,8 +59,7 @@ function resetGallery()
  * 
  * @params Array works
  */
-function fillGallery(works)
-{
+function fillGallery(works) {
     resetGallery();
     works.forEach(work => createWork(work));
 }
@@ -72,64 +69,100 @@ function fillGallery(works)
  * 
  * @param Object work, a work data
  */
-function createWork(work)
-{
+function createWork(work) {
     let figcaption = document.createElement("figcaption");
-        figcaption.textContent = work.title
+    figcaption.textContent = work.title
 
     let img = document.createElement("img");
-        img.src = work.imageUrl;
-        img.alt = work.title
+    img.src = work.imageUrl;
+    img.alt = work.title
 
     let figure = document.createElement("figure");
-        figure.appendChild(img);
-        figure.appendChild(figcaption);
+    figure.appendChild(img);
+    figure.appendChild(figcaption);
 
     node_gallery.appendChild(figure);
 }
 
-function createFilter(filter)
-{
+
+function createFilter(filter) {
+
     let li = document.createElement('li');
-        li.classList.add('filter-tag');
-        li.dataset.category = filter.id;
-        li.textContent = filter.name;
+    li.classList.add('filter-tag');
+    li.dataset.category = filter.id;
+    li.textContent = filter.name;
 
-        li.addEventListener('click', event => {
+    li.addEventListener('click', event => {
 
-            let node = event.target;
-            let categoryId = node.dataset.category;
-            let filteredWorks = works;
-            
-            resetActiveFilter(categoryId);
+        let node = event.target;
+        let categoryId = node.dataset.category;
+        let filteredWorks = works;
 
-            if (categoryId != 0)
-            {
-                filteredWorks= works.filter(work => work.categoryId == categoryId);
-            }
-            
-            fillGallery(filteredWorks);
+        resetActiveFilter(categoryId);
 
-        })
-    
+        if (categoryId != 0) {
+            filteredWorks = works.filter(work => work.categoryId == categoryId);
+        }
+
+        fillGallery(filteredWorks);
+    });
+
     node_filters.append(li);
-}
+    loggedAdmin();
+};
 
-function resetActiveFilter(activeId)
-{
+
+/**
+ * Create admin menu
+ */
+function adminMenu() {
+    const projecTitle = document.querySelector("[rel=js-filters]", "h2");
+
+    let menuIcon = document.createElement("span");
+        menuIcon.classList.add("material-symbols-outlined");
+        menuIcon.textContent = "edit_square";
+
+    let menu = document.createElement("span");
+        menu.classList.add("edit");
+        menu.textContent = "modifier";
+
+    let adminMenu = document.createElement("div");
+        adminMenu.classList.add("admin-menu");
+
+        adminMenu.appendChild(menuIcon);
+        adminMenu.appendChild(menu);
+        projecTitle.appendChild(adminMenu);
+
+};
+
+/**
+ * Remove filters when admin is logged
+ */
+function removeFilters() {
+    node_filters.innerHTML = "";
+};
+
+/**
+ * Display admin menu
+ */
+function loggedAdmin() {
+    if (sessionStorage.token) {
+        removeFilters();
+        adminMenu();
+    }
+};
+
+function resetActiveFilter(activeId) {
     const filters = node_filters.querySelectorAll('.filter-tag');
 
     filters.forEach(filter => filter.classList.remove('active'));
 
     filters.forEach(filter => {
-        if (filter.dataset.category == activeId)
-        {
+        if (filter.dataset.category == activeId) {
             filter.classList.add('active')
         }
     })
-}
-
-
+};
 
 (async () => {
     // Get Data
@@ -137,15 +170,11 @@ function resetActiveFilter(activeId)
     works = await httpGet(url_works);
 
     // Create Categories
-    createFilter({id: 0, name: 'Tous'});
+    createFilter({ id: 0, name: 'Tous' });
     categories.forEach(category => createFilter(category));
 
     // Create Works
     fillGallery(works);
     resetActiveFilter(0);
 })();
-
-
-
-
 

@@ -1,9 +1,11 @@
+"use strict"
+
 const url_login = "http://localhost:5678/api/users/login";
 
 let form = document.querySelector('form');
 let email = document.querySelector('email');
 let password = document.querySelector('password');
-const loginState = document.querySelector("[rel=js-status]");
+
 
 /**
  * Make a HTTP POST Request and return an array
@@ -27,7 +29,6 @@ async function httpPost(url, data, headers) {
     }
 };
 
-
 function accessAuth(login, storage) {
     if (login.error) {
         alert("Wrong Email and/or Password");
@@ -37,34 +38,47 @@ function accessAuth(login, storage) {
     };
 };
 
-function storeToken(login, storage) {
-    storage.setItem("token", login.token);
+/**
+ * 
+ * Stores the token in the session storage
+ * 
+ * @param Object login, to get token 
+ * @param Object sessionStorage, where is store token
+ */
+function storeToken(login, sessionStorage) {
+    sessionStorage.setItem("token", login.token);
 };
 
-function accessMainPage(storage) {
-    if (storage.token != undefined) {
+/**
+ * 
+ * Redirects to the homepage
+ * 
+ * @param sessionStorage, where the token is store
+ */
+function accessMainPage(sessionStorage) {
+    if (sessionStorage.token != undefined) {
         window.location = "index.html";
     };
 };
 
-function loginStatus(storage) {
-    if (storage.token !== undefined) {
-        loginState.textContent = "logout";
-    };
-};
-
-
-
+/**
+ * 
+ * @param String url 
+ * @param Object data, data you need to pass the request 
+ * @param  Object headers, the HTTP request headers options
+ */
 async function login(url, data, headers) {
     // Post data
     const login = await httpPost(url, data, headers);
-    const storage = sessionStorage;
 
-    accessAuth(login, storage);
-    accessMainPage(storage);
-    
+    accessAuth(login, sessionStorage);
+    accessMainPage(sessionStorage);  
 };
 
+
+/**
+ * Triggers the submit button event
+ */
 form.addEventListener("submit", event => {
     event.preventDefault();
 
@@ -80,15 +94,6 @@ form.addEventListener("submit", event => {
     login(url_login, data, headers);
 });
 
-loginStatus(sessionStorage);
-
-
-loginState.addEventListener('click', () => {
-    sessionStorage.clear();
-    window.location = "login.html";
-    
-    
-});
 
 
 

@@ -128,10 +128,37 @@ nav a {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
+#portofolio {
+	position: relative;
+}
+
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+.admin-menu {
+	position:absolute;
+	top: 543px;
+	right: 740px;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.material-symbols-outlined {
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+}
+
+.edit {
+	font-size: 0.9rem;
+	font-weight: 400;
+}
+
+
 
 .menu {
 	display: flex;
@@ -160,6 +187,11 @@ nav a {
 	cursor: pointer;
 }
 
+.active {
+	background-color: #1D6154;
+	color: white;
+}
+
 
 .gallery {
 	width: 100%;
@@ -173,6 +205,7 @@ nav a {
 	width: 100%;
 
 }
+
 #contact {
 	width: 50%;
 margin: auto;
@@ -298,5 +331,5 @@ footer li {
 	color: rgba(0, 0, 0, 1);
 	position: relative;
 	left: 30px;;
-
 }
+
