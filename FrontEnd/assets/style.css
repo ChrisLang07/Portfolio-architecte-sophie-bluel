@@ -153,6 +153,11 @@ nav a {
 	line-height: 16px;
 }
 
+.modal-link {
+	text-decoration: none;
+	color: black;
+}
+
 .edit {
 	font-size: 0.9rem;
 	font-weight: 400;
