@@ -11,8 +11,14 @@
         rel="stylesheet">
     <meta name="description" content="">
     <link rel="stylesheet" href="./assets/style.css">
+    <link rel="stylesheet" href="./assets/modal.css">
+    <script src="./assets/js/security.js" defer></script>
+    <script src="./assets/js/gallery.js" defer></script>
     <script src="./assets/js/login.js" defer></script>
+    <script src="./assets/js/admin.js" defer></script>
     <script src="./assets/js/navbar.js" defer></script>
+    <script src="./assets/js/modal.js" defer></script>
+
 </head>
 
 <body>
@@ -22,7 +28,7 @@
             <ul>
                 <li>projets</li>
                 <li>contact</li>
-                <a  href="login.html" rel="js-status">login</a>
+                <a href="login.html" rel="js-status">login</a>
                 <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
             </ul>
         </nav>
@@ -33,15 +39,21 @@
                 <span class="login-title">Log In</span>
             </div>
 
-            <form>
+            
+
+            <form name="authentification">
                 <div class="login-form">
+                    
                     <div class="login-form--area">
                         <label for="name">E-mail</label>
                         <input id='email' type="text" name="email" required>
                     </div>
+                    <div class="alert" rel="js-alert">
+
+                    </div>
                     <div class="login-form--area">
                         <label for="pwd">Mot de passe</label>
-                        <input id ='password' type="password" name="pwd" required>
+                        <input id='password' type="password" name="pwd" required>
                     </div>
                 </div>
                 <div class="submit-area">
@@ -49,10 +61,7 @@
                     <span class="forgotten-pwd"><a href="#">Mot de passe oublié</a></span>
                 </div>
             </form>
-
         </div>
-
-
     </main>
 
     <footer>

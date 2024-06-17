@@ -1,29 +1,22 @@
 "use strict"
 
-const loginState = document.querySelector("[rel=js-status]");
+const navStatus = document.querySelector("[rel=js-status]");
 
-
-/**
- *
- * Display the user login status
- *  
- * @param Object sessionStorage, where the token is stored
- */
-function loginStatus(sessionStorage) {
-    if (sessionStorage.token !== undefined) {
-        loginState.textContent = "logout";
-    };
+function logout() {
+    store.removeItem("STORE_TOKEN");  
+    window.location = 'index.html';
+    
 };
 
-/**
- * Redirects to the login page after a logout
- */
-loginState.addEventListener('click', () => {
-    sessionStorage.clear();
-    window.location = "login.html";
-});
+function login() {
+    let token = store.getItem("STORE_TOKEN");
+    token = token.trim();
 
-loginStatus(sessionStorage);
-
-
-
+    if (token.length) {
+        navStatus.textContent = "logout";
+        navStatus.addEventListener("click", event => {
+            event.preventDefault();
+            logout();
+        });
+    };
+};
