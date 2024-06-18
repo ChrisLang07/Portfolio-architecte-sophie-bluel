@@ -2,7 +2,7 @@
 
 const url_works = "http://localhost:5678/api/works";
 const url_categories = "http://localhost:5678/api/categories";
-const url_delete = "http://localhost:5678/api/works/{id}";
+const url_deleteWork = "http://localhost:5678/api/works/{id}";
 
 /**
  * Make a HTTP GET Request and return an array
@@ -51,11 +51,11 @@ async function httpPostJson(url, data, headers) {
  * @param Object headers, the HTTP request headers options 
  * 
  */
-async function httpDelete(url, headers) {
+async function httpDelete(url, token) {
     try {
         const response = await fetch(url, {
-            method: 'POST',
-            headers : headers
+            method: 'DELETE',
+            headers : {'Authorization': token}
         });
         return await response.json();
     }

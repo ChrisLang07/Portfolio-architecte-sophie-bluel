@@ -22,7 +22,7 @@ function createFilter(filter) {
             let node = event.target;
             let categoryId = node.dataset.category;
             let filteredWorks = works;
-
+            
             resetActiveFilter(categoryId);
 
             if (categoryId != 0) {
@@ -32,7 +32,6 @@ function createFilter(filter) {
             fillGallery(filteredWorks);
         });
         node_filters.append(li);
-        
     };
 
 function resetActiveFilter(activeId) {

@@ -17,11 +17,9 @@ function createModal() {
         darkBackground.style.display = "flex";
         modal.style.display = "block";
         fillPreviewGallery(works);
-        createCloseCross();
-        console.log(node_gallery);
-
+        createCloseCross();  
+        closeModal();    
     });
-
 };
 
 /**
@@ -33,16 +31,23 @@ function createCloseCross() {
     spanCross.classList.add("material-symbols-outlined");
     spanCross.setAttribute("id", "cross");
     spanCross.textContent = "close";
-    
+
     modal.appendChild(spanCross);
-
-    // Close the modal window
-    spanCross.addEventListener("click", event => {
-        darkBackground.style.display = "none";
-        modal.style.display = "none";
-    });
-
 };
+
+/**
+ * Close the modal window
+ */
+function closeModal() {
+    darkBackground.addEventListener("click", event => {
+        if (event.target.matches("#cross") || 
+            !event.target.closest(".modal")) {
+
+                darkBackground.style.display = "none";
+                modal.style.display = "none";}
+    });
+};
+
 
 /**
  * 
@@ -57,8 +62,10 @@ function createPreviewGallery(work) {
 
     let spanTrash = document.createElement("span");
     spanTrash.classList.add("material-symbols-outlined");
+    spanTrash.setAttribute("rel", "js-trash");
     spanTrash.setAttribute("id", "trash");
     spanTrash.textContent = "delete";
+    spanTrash.dataset.category = work.categoryId;
 
     let div = document.createElement("div");
     div.classList.add("modal-pic");
@@ -68,9 +75,12 @@ function createPreviewGallery(work) {
 
     previewGallery.appendChild(div);
 
-    console.log(work);
+    spanTrash.addEventListener("click", event => {
+        let node = event.target;
+        let categoryId = node.dataset.category;
 
-
+        console.log(categoryId);
+    })
 };
 
 /**
@@ -82,8 +92,6 @@ function createPreviewGallery(work) {
 function fillPreviewGallery(works) {
     works.forEach(work => createPreviewGallery(work));
 };
-
-
 
 /**
  * Create an alert message
@@ -98,7 +106,7 @@ function modalAlertMessage() {
     button.setAttribute("type", "button");
     button.classList.add("validation");
     button.textContent = "Ok";
-    
+
     let div = document.createElement("div");
     div.classList.add("zone-text");
 
@@ -113,5 +121,14 @@ function modalAlertMessage() {
         alert.style.display = "none";
         alert.innerHTML = "";
     })
-
 };
+
+
+/*(async () => {
+    const deleteWork = await httpDelete(url_deleteWork, store.token);
+    console.log(deleteWork);
+})();
+*/
+
+
+
