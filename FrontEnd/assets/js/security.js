@@ -2,7 +2,7 @@
 
 const url_works = "http://localhost:5678/api/works";
 const url_categories = "http://localhost:5678/api/categories";
-const url_deleteWork = "http://localhost:5678/api/works/{id}";
+const url_deleteWork = "http://localhost:5678/api/works/";
 
 /**
  * Make a HTTP GET Request and return an array
@@ -16,7 +16,7 @@ async function httpGet(url) {
         return await response.json();
     }
     catch (error) {
-        alert('HTTP Error ! :' + response.status);
+        alert('HTTP Error ! :' + error);
         return [];
     }
 }
@@ -38,7 +38,7 @@ async function httpPostJson(url, data, headers) {
         return await response.json();
     }
     catch (error) {
-        alert('HTTP Error ! :' + response.status);
+        alert('HTTP Error ! :' + error);
         return [];
     }
 }
@@ -55,12 +55,14 @@ async function httpDelete(url, token) {
     try {
         const response = await fetch(url, {
             method: 'DELETE',
-            headers : {'Authorization': token}
+            headers : {'Authorization': 'Bearer ' + token}
         });
-        return await response.json();
+        
+        return response.ok;  
+        
     }
     catch (error) {
-        alert("HTTP Error : " + response.status)
+        alert("HTTP Error : " + error)
         return [];
     }
 };

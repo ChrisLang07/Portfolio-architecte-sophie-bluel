@@ -26,7 +26,8 @@ function createWork(work) {
     let figure = document.createElement("figure");
     figure.appendChild(img);
     figure.appendChild(figcaption);
-
+    figure.dataset.category = work.id;
+    
     node_gallery.appendChild(figure);
 };
 

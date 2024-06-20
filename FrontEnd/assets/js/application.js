@@ -1,5 +1,5 @@
 
-let works =[];
+let works = [];
 let categories = [];
 
 (async () => {

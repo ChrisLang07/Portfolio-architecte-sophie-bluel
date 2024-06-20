@@ -1,7 +1,9 @@
 "use strict"
 
-let previewGallery = document.querySelector("[rel=js-preview-gallery]");
+const previewGallery = document.querySelector("[rel=js-preview-gallery]");
+const modalPreviewGallery = document.querySelector(".modal-preview--gallery");
 const darkBackground = document.querySelector(".darkbackground");
+const modal = document.querySelector(".modal");
 
 /**
  * Create a modal window
@@ -10,16 +12,32 @@ const darkBackground = document.querySelector(".darkbackground");
 function createModal() {
 
     const menuModal = document.querySelector(".modal-link");
+    const uploadModal = document.querySelector(".upload-modal");
+    const addButton = document.querySelector(".submit-area--button");
 
-    let modal = document.querySelector(".modal");
+    addButton.addEventListener("click", event => {
+
+        uploadModal.style.display = "block";
+        modalPreviewGallery.style.display = "none";
+        
+        const arrowBack = document.querySelector(".arrow-back");
+
+        arrowBack.addEventListener("click", event => {
+            modalPreviewGallery.style.display = "block";
+            uploadModal.style.display = "none";
+        });
+
+    });
+
 
     menuModal.addEventListener("click", event => {
-        darkBackground.style.display = "flex";
-        modal.style.display = "block";
-        fillPreviewGallery(works);
-        createCloseCross();  
-        closeModal();    
+        displayModal();
+        createCloseCross();
+        closeModal();
     });
+
+    fillPreviewGallery(works);
+
 };
 
 /**
@@ -35,16 +53,33 @@ function createCloseCross() {
     modal.appendChild(spanCross);
 };
 
+
+/**
+ * Display the modal
+ */
+function displayModal() {
+    darkBackground.style.display = "flex";
+    modal.style.display = "block";
+};
+
+/**
+ * Hide the modal
+ */
+function hideModal() {
+    darkBackground.style.display = "none";
+    modal.style.display = "none";
+}
+
 /**
  * Close the modal window
  */
 function closeModal() {
     darkBackground.addEventListener("click", event => {
-        if (event.target.matches("#cross") || 
+        if (event.target.matches("#cross") ||
             !event.target.closest(".modal")) {
 
-                darkBackground.style.display = "none";
-                modal.style.display = "none";}
+            hideModal();
+        };
     });
 };
 
@@ -53,10 +88,11 @@ function closeModal() {
  * 
  * Create the preview gallery
  * 
- * @param Object workPreview, preview of a work 
+ * @param Object work, a work from works 
  */
 function createPreviewGallery(work) {
 
+    //Create preview pic for preview gallery
     let img = document.createElement("img");
     img.src = work.imageUrl;
 
@@ -65,36 +101,36 @@ function createPreviewGallery(work) {
     spanTrash.setAttribute("rel", "js-trash");
     spanTrash.setAttribute("id", "trash");
     spanTrash.textContent = "delete";
-    spanTrash.dataset.category = work.categoryId;
+    spanTrash.dataset.category = work.id;
 
     let div = document.createElement("div");
     div.classList.add("modal-pic");
+    div.dataset.category = work.id;
 
     div.appendChild(img);
     div.appendChild(spanTrash);
 
     previewGallery.appendChild(div);
 
+    // Remove a preview pic from preview gallery
     spanTrash.addEventListener("click", event => {
-        let node = event.target;
-        let categoryId = node.dataset.category;
+        deletedWork(work.id, div);
+    });
 
-        console.log(categoryId);
-    })
 };
 
 /**
  * 
  * To fill the preview gallery
  * 
- * @param Object workPreview, an preview image from works 
+ * @param Object work, a work from works 
  */
 function fillPreviewGallery(works) {
     works.forEach(work => createPreviewGallery(work));
 };
 
 /**
- * Create an alert message
+ * Create an alert message for wrong and/or email/password
  */
 function modalAlertMessage() {
     const alert = document.querySelector("[rel=js-alert]");
@@ -124,11 +160,14 @@ function modalAlertMessage() {
 };
 
 
-/*(async () => {
-    const deleteWork = await httpDelete(url_deleteWork, store.token);
-    console.log(deleteWork);
-})();
-*/
+async function deletedWork(id, div) {
+    const deletedWork = await httpDelete(url_deleteWork + id, store.STORE_TOKEN)
+    let figure = node_gallery.querySelector('[data-category="' + id + '"]');
+    if (deletedWork) {
+        previewGallery.removeChild(div);
+        node_gallery.removeChild(figure);
+    };
+};
 
 
 
