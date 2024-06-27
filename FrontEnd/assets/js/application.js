@@ -20,9 +20,12 @@ let categories = [];
 
     if (!store.length == 0) {
         removeFilters()
-        adminMenu();
+        createAdminMenu();
         login();
+        
+        
     };
+    
     
 })();
 

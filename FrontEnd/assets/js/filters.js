@@ -11,13 +11,13 @@ const node_filters = document.querySelector("[rel=js-filters]");
 function createFilter(filter) {
 
     
-    
-    let li = document.createElement('li');
-        li.classList.add('filter-tag');
-        li.dataset.category = filter.id;
-        li.textContent = filter.name;
 
-        li.addEventListener('click', event => {
+        let li = document.createElement('li');
+            li.classList.add('filter-tag');
+            li.dataset.category = filter.id;
+            li.textContent = filter.name;
+
+            li.addEventListener('click', event => {
 
             let node = event.target;
             let categoryId = node.dataset.category;

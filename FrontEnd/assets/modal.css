@@ -24,6 +24,19 @@
     text-align: center;
 }
 
+
+
+.submit-button {
+    font-size: 0.9rem;
+    font-weight: 700;
+    width: 38%;
+    height: 36px;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 60px;
+    background-color: #1D6154;
+}
+
 #cross {
     position: absolute;
     display: flex;
@@ -32,22 +45,17 @@
     right: 15px;
 }
 
-
-
 #cross:hover {
     cursor: pointer;
     opacity: 0.5;
     transition: 0.25s all;
 }
 
-
-
 .gallery-title {
     font-size: 1.6rem;
     font-weight: 400;
     display: block;
     margin-top: 50px;
-
 }
 
 .preview-gallery {
@@ -64,12 +72,16 @@
     max-height: 300px;
 }
 
+.modal-pic {
+    position: relative;
+}
+
 .preview-gallery img {
     width: 100%;
     object-fit: cover;
 }
 
-.modal-pic {
+.preview-img {
     position: relative;
 }
 
@@ -129,13 +141,13 @@
     border: none;
 }
 
-/*.upload {
+/*.upload-modal {
     display: none;
 }*/
 
 .arrow-back {
     display: block;
-    padding: 25px 0 0 25px;
+    padding: 15px 0 0 25px;
     width: 21px;
     height: 18px;
     text-align: left;
@@ -148,36 +160,36 @@
     font-weight: 400;
 }
 
-.add-pic {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 61%;
-    height: 169px;
-    margin: 30px auto;
-    padding: 20px;
-    gap: 30px;
-    background-color: #E8F1F6;
+.upload-img {
+    width: 37%;
+    height:100%;
+    object-fit: cover;
+    position: absolute;
+
 }
 
-.image-mode {
-    transform: scale(5);
+.images-mode {
+    transform: scale(4);
     opacity: 0.2;
-    position: relative;
-    top: 40px;
-    right: 20px;
+    position: absolute;
+    top: 50px;
+    right: 215px;
 }
 
 .image-upload {
     position: relative;
+    height: 180px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    background-color: #E8F1F6;
+    width: 66%;
+    margin:auto;
 }
 
-.fileUpload {
+.file-upload {
     background-color: rgba(203, 214, 220, 1);
     border-radius: 50px;
     color: rgba(48, 102, 133, 1);
@@ -189,8 +201,11 @@
     text-align: center;
     cursor: pointer;
 }
+.file-upload .active {
+    background-color: #E8F1F6;
+}
 
-.fileUpload input.upload {
+.file-upload .input-file {
     position: absolute;
     top: 0;
     right: 0;
@@ -203,43 +218,54 @@
     height: 46px;
 }
 
+
 input[type="file"] {
     position: fixed;
     right: 100%;
     bottom: 100%;
 }
 
-.pic-extention-size {
+.pic-extension-size {
     font-size: 0.7rem;
     font-weight: 400;
+    padding-bottom: 20px;
+}
+
+.submit-form {
+    width: 66%;
+    margin: 30px auto;
+    border-bottom: 1px solid #B3B3B3;
+    padding-bottom: 50px;
 }
 
 .pic-specs {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: 67%;
-    margin: auto;
-    padding-bottom: 50px;
-    ;
-    border-bottom: 1px solid rgba(179, 179, 179, 1)
+    gap: 30px;
 }
 
-.image-property {
+
+.image-property--title {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
-    width: 100%;
-    margin: auto;
+    gap: 15px;
 }
+
+.image-property--category {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
 
 .image-property label {
     font-size: 0.9rem;
     font-weight: 500;
 }
 
-.pic-attribut {
+.image-title, .image-category {
     width: 100%;
     height: 51px;
     border: none;
@@ -248,19 +274,23 @@ input[type="file"] {
     box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
 }
 
-.pic-attribut option {
+.image-category option {
     font-size: 0.9rem;
     font-weight: 400;
 }
 
-.submit-pic--button {
+.submit-image-button {
     font-size: 0.9rem;
     font-weight: 700;
     height: 36px;
     width: 38%;
-    margin: 30px 0 50px;
+    margin: 0 50px;
     border: none;
     border-radius: 60px;
     color: white;
     background: rgba(167, 167, 167, 1);
+}
+
+.active-button {
+    background-color: #1D6154;
 }

@@ -18,8 +18,8 @@ async function httpGet(url) {
     catch (error) {
         alert('HTTP Error ! :' + error);
         return [];
-    }
-}
+    };
+};
 
 /**
  * Make a HTTP POST Request and return an array
@@ -40,8 +40,8 @@ async function httpPostJson(url, data, headers) {
     catch (error) {
         alert('HTTP Error ! :' + error);
         return [];
-    }
-}
+    };
+};
 
 /**
  * 
@@ -55,17 +55,33 @@ async function httpDelete(url, token) {
     try {
         const response = await fetch(url, {
             method: 'DELETE',
-            headers : {'Authorization': 'Bearer ' + token}
+            headers: { 'Authorization': 'Bearer ' + token }
         });
-        
-        return response.ok;  
-        
+
+        return response.ok;
+
     }
     catch (error) {
         alert("HTTP Error : " + error)
         return [];
-    }
+    };
 };
 
+async function httpPostImage(url, token, formData) {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+            body: formData
+        });
 
+        return response.ok;
+    }
+    catch(error) {
+        alert("HTTP Error : " + error)
+        return [];
+    };
+};
 

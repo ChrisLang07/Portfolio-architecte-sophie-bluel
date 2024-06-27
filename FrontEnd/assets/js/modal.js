@@ -1,47 +1,60 @@
 "use strict"
 
-const previewGallery = document.querySelector("[rel=js-preview-gallery]");
-const modalPreviewGallery = document.querySelector(".modal-preview--gallery");
-const darkBackground = document.querySelector(".darkbackground");
-const modal = document.querySelector(".modal");
+const darkBackground = document.querySelector('.darkbackground')
+const modal = document.querySelector('.modal');
+
 
 /**
- * Create a modal window
+ * Display the modal
  */
-
-function createModal() {
-
-    const menuModal = document.querySelector(".modal-link");
-    const uploadModal = document.querySelector(".upload-modal");
-    const addButton = document.querySelector(".submit-area--button");
-
-    addButton.addEventListener("click", event => {
-
-        uploadModal.style.display = "block";
-        modalPreviewGallery.style.display = "none";
+function displayModal() {
+    const displayModal = document.querySelector('.modal-link');
+    const modalPreviewGalleryllery = document.querySelector('.modal-preview-gallery');
+    const uploadFileModal = document.querySelector('.upload-file-modal');
+    
+    displayModal.addEventListener('click', event => {
         
-        const arrowBack = document.querySelector(".arrow-back");
+        darkBackground.style.display = 'flex';
+        modal.style.display = 'block';
+        modalPreviewGalleryllery.style.display = 'block';
+        modalPreviewGalleryllery.innerHTML = '';
+        uploadFileModal.style.display = 'none';
+        uploadFileModal.innerHTML = '';
+        
+        createCloseCross()
+        getWorks()
+    })
+};
 
-        arrowBack.addEventListener("click", event => {
-            modalPreviewGallery.style.display = "block";
-            uploadModal.style.display = "none";
-        });
+async function getWorks() {
+    const getWorks = await httpGet(url_works);
+    createPreviewGallery(getWorks);
+    fillGallery(getWorks);
+}
 
+/**
+ * 
+ * Close the modal window
+ * 
+ */
+function closeModal() {
+    
+    darkBackground.addEventListener("click", event => {
+
+        if (event.target.matches("#cross") ||
+            !event.target.closest(".modal")) {
+
+            
+            modal.style.display = "none";
+            darkBackground.style.display = "none";
+            
+        };
+        
     });
-
-
-    menuModal.addEventListener("click", event => {
-        displayModal();
-        createCloseCross();
-        closeModal();
-    });
-
-    fillPreviewGallery(works);
-
 };
 
 /**
- * Create a cross on the modal window
+ * Create a cross for closing the modal
  */
 function createCloseCross() {
 
@@ -51,50 +64,61 @@ function createCloseCross() {
     spanCross.textContent = "close";
 
     modal.appendChild(spanCross);
+
+    closeModal();
 };
 
 
-/**
- * Display the modal
- */
-function displayModal() {
-    darkBackground.style.display = "flex";
-    modal.style.display = "block";
-};
+
 
 /**
- * Hide the modal
+ * Create a preview gallery of works
  */
-function hideModal() {
-    darkBackground.style.display = "none";
-    modal.style.display = "none";
-}
+function createPreviewGallery(works) {
 
-/**
- * Close the modal window
- */
-function closeModal() {
-    darkBackground.addEventListener("click", event => {
-        if (event.target.matches("#cross") ||
-            !event.target.closest(".modal")) {
+    const modal = document.querySelector('.modal');
 
-            hideModal();
-        };
+    let span = document.createElement('span');
+    span.classList.add("gallery-title");
+    span.textContent = "Galerie photo";
+
+    let divPreviewGallery = document.createElement('div');
+    divPreviewGallery.classList.add('preview-gallery');
+    divPreviewGallery.setAttribute('rel', 'js-preview-gallery');
+
+    let button = document.createElement('button');
+    button.setAttribute('type', 'submit');
+    button.classList.add('submit-button');
+    button.textContent = 'Ajouter une photo';
+
+
+    let divModalPreviewGallery = document.querySelector('.modal-preview-gallery');
+    
+    divModalPreviewGallery.appendChild(span);
+    divModalPreviewGallery.appendChild(divPreviewGallery);
+    divModalPreviewGallery.appendChild(button);
+
+    fillPreviewGallery(works);
+
+    button.addEventListener('click', event => {
+        
+        displayUploadModal();
+        
+       
     });
 };
 
-
 /**
- * 
- * Create the preview gallery
+ * Create an image preview of a work
  * 
  * @param Object work, a work from works 
  */
-function createPreviewGallery(work) {
+function previewImg(work) {
+    const previewGalleryImg = document.querySelector('.preview-gallery');
 
-    //Create preview pic for preview gallery
-    let img = document.createElement("img");
+    let img = document.createElement('img');
     img.src = work.imageUrl;
+    img.alt = work.title;
 
     let spanTrash = document.createElement("span");
     spanTrash.classList.add("material-symbols-outlined");
@@ -103,71 +127,323 @@ function createPreviewGallery(work) {
     spanTrash.textContent = "delete";
     spanTrash.dataset.category = work.id;
 
-    let div = document.createElement("div");
-    div.classList.add("modal-pic");
-    div.dataset.category = work.id;
+    let divPreviewImg = document.createElement('div');
+    divPreviewImg.classList.add('preview-img');
+    divPreviewImg.dataset.category = work.id;
 
-    div.appendChild(img);
-    div.appendChild(spanTrash);
+    divPreviewImg.appendChild(img);
+    divPreviewImg.appendChild(spanTrash);
 
-    previewGallery.appendChild(div);
+    previewGalleryImg.appendChild(divPreviewImg);
 
-    // Remove a preview pic from preview gallery
+    // Delete a work from gallery/Preview Gallery
     spanTrash.addEventListener("click", event => {
-        deletedWork(work.id, div);
+        deletedWork(work.id);
+
     });
-
 };
 
 /**
- * 
- * To fill the preview gallery
- * 
- * @param Object work, a work from works 
+ * Delete a work from works and update gallery/Preview Gallery
  */
-function fillPreviewGallery(works) {
-    works.forEach(work => createPreviewGallery(work));
-};
+async function deletedWork(id) {
 
-/**
- * Create an alert message for wrong and/or email/password
- */
-function modalAlertMessage() {
-    const alert = document.querySelector("[rel=js-alert]");
+    const deletedWork = await httpDelete(url_deleteWork + id, store.STORE_TOKEN);
+    const previewGallery = document.querySelector('.preview-gallery');
 
-    let span = document.createElement("span");
-    span.textContent = "Wrong Email and/or Password !";
-
-    let button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.classList.add("validation");
-    button.textContent = "Ok";
-
-    let div = document.createElement("div");
-    div.classList.add("zone-text");
-
-
-    div.appendChild(span);
-    div.appendChild(button);
-
-    alert.appendChild(div);
-    alert.style.display = "block";
-
-    button.addEventListener("click", event => {
-        alert.style.display = "none";
-        alert.innerHTML = "";
-    })
-};
-
-
-async function deletedWork(id, div) {
-    const deletedWork = await httpDelete(url_deleteWork + id, store.STORE_TOKEN)
     let figure = node_gallery.querySelector('[data-category="' + id + '"]');
+    let divTodelete = previewGallery.querySelector('[data-category="' + id + '"]');
     if (deletedWork) {
-        previewGallery.removeChild(div);
+
         node_gallery.removeChild(figure);
+        previewGallery.removeChild(divTodelete);
     };
 };
 
+/**
+ * 
+ * Filled the preview gallery with an image of each work
+ * 
+ * @param Object works 
+ */
+function fillPreviewGallery(works) {
+
+    works.forEach(work => previewImg(work));
+};
+
+function uploadFileModal() {
+    
+    let div = document.querySelector('.upload-file-modal');
+        
+
+    let spanArrow = document.createElement('span');
+        spanArrow.classList.add('material-symbols-outlined');
+        spanArrow.classList.add('arrow-back')
+        spanArrow.textContent = 'arrow_back';
+
+    let spanTitle = document.createElement('span');
+        spanTitle.classList.add('gallery-title');
+        spanTitle.textContent = 'Ajouter photo';
+
+    
+        div.appendChild(spanArrow);
+        div.appendChild(spanTitle);
+    
+
+         modal.appendChild(div);
+
+        backToModalPreviewGallery();
+}
 
 
+/**
+ * Create the upload zone for an image of a work
+ */
+function uploadFileContent() {
+
+    let div = document.querySelector('.upload-file-modal');
+    
+    let spanIcon = document.createElement('span');
+        spanIcon.classList.add('material-symbols-outlined');
+        spanIcon.classList.add('images-mode');
+        spanIcon.textContent = "imagesmode";
+
+    let input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.classList.add("input-file");
+
+    let spanAdd = document.createElement('span');
+        spanAdd.textContent = "+ Ajouter photo";
+        
+    let FileUpload = document.createElement('div');
+        FileUpload.classList.add('file-upload');
+
+    let spanExtensionSize = document.createElement('span');
+        spanExtensionSize.classList.add('pic-extension-size');
+        spanExtensionSize.textContent = "jpg, png : 4mo max";
+        
+    let divUpload = document.createElement('div');
+        divUpload.classList.add("image-upload");
+
+        FileUpload.appendChild(input);
+        FileUpload.appendChild(spanAdd);
+
+        divUpload.appendChild(spanIcon);
+        divUpload.appendChild(FileUpload);
+        divUpload.appendChild(spanExtensionSize);
+
+    let option = document.createElement('option');
+        option.value = "";
+        option.textContent = "";
+
+    let optionObject = document.createElement('option');
+        optionObject.value = "Objets";
+        optionObject.textContent = "Objets"
+    
+    let optionAppartments = document.createElement('option');
+        optionAppartments.value = "Appartements";
+        optionAppartments.textContent = "Appartements";
+        
+    let optionHotel = document.createElement('option');
+        optionHotel.value = "Hôtel & restaurants";
+        optionHotel.textContent = "Hôtel & restaurants";
+
+    let select = document.createElement('select');
+        select.classList.add('image-category');
+        select.setAttribute('name', 'category');
+
+        select.appendChild(option);
+        select.appendChild(optionObject);
+        select.appendChild(optionAppartments);
+        select.appendChild(optionHotel);
+
+    let labelCategory = document.createElement('label');
+        labelCategory.setAttribute('for', 'name');
+        labelCategory.textContent = 'Catégorie';
+
+    let divImagePropertyCategory = document.createElement('div');
+        divImagePropertyCategory.classList.add('image-property--category');
+
+        divImagePropertyCategory.appendChild(labelCategory);
+        divImagePropertyCategory.appendChild(select);
+
+
+    let inputImageTitle = document.createElement('input');
+        inputImageTitle.classList.add('image-title');
+        inputImageTitle.setAttribute('type', 'text');
+        inputImageTitle.setAttribute('name', 'title');
+
+    let labelTitle = document.createElement('label');
+        labelTitle.setAttribute('for', 'name');
+        labelTitle.textContent = 'Titre';
+
+
+    let divImagePropertyTitle = document.createElement('div');
+        divImagePropertyTitle.classList.add('image-property--title');
+
+        divImagePropertyTitle.appendChild(labelTitle);
+        divImagePropertyTitle.appendChild(inputImageTitle);
+
+
+    let divPicSpecs = document.createElement('div');
+        divPicSpecs.classList.add('pic-specs');
+
+        divPicSpecs.appendChild(divImagePropertyTitle);
+        divPicSpecs.appendChild(divImagePropertyCategory);
+
+    let form = document.createElement('form');
+        form.classList.add('submit-form');
+
+        form.appendChild(divPicSpecs);
+
+    let button = document.createElement('button');
+        button.setAttribute('type', 'submit');
+        button.classList.add('submit-image-button');
+        button.textContent = "Valider";    
+
+    
+        div.appendChild(divUpload);
+        div.appendChild(form);
+        div.appendChild(button);
+};
+
+function backToModalPreviewGallery() {
+    const arrowBack = document.querySelector('.arrow-back');
+    const modalPreviewGallery = document.querySelector('.modal-preview-gallery');
+    const fileModal = document.querySelector('.upload-file-modal');
+    
+    
+    arrowBack.addEventListener('click', event => {
+        
+        
+        modalPreviewGallery.style.display = "block";
+        modalPreviewGallery.innerHTML = '';
+        getWorks();
+        fileModal.style.display = 'none';
+
+        
+        
+    })
+}
+
+function displayUploadModal() {
+    const modal = document.querySelector('.modal');
+    const modalPreviewGallery = document.querySelector('.modal-preview-gallery');
+    const fileModal = document.querySelector('.upload-file-modal');
+    
+    modalPreviewGallery.style.display = "none";
+    fileModal.style.display = 'block';
+    fileModal.innerHTML = "";
+    
+    uploadFileModal();
+    uploadFileContent();
+    displayImagePreview();
+    
+   
+}
+
+/**
+ * Display the image preview
+ */
+function displayImagePreview() {
+    const uploadZone = document.querySelector(".image-upload");
+    const inputFile = document.querySelector(".input-file");
+    const inputTitle = document.querySelector(".image-title");
+    const inputCategory = document.querySelector(".image-category");
+    const submitButton = document.querySelector(".submit-image-button");
+    const fileUpload = document.querySelector('.file-upload');
+
+    inputFile.addEventListener('change', event => {
+
+        let nodeImage = event.target.files;
+        
+        if (nodeImage.length > 0) {
+            fileUpload.classList.add('active');
+            let img = document.createElement("img");
+            img.src = URL.createObjectURL(nodeImage[0]);
+            img.classList.add("upload-img");
+
+            uploadZone.appendChild(img);
+            // Add a title to an image of a work
+            inputTitle.addEventListener('input', event => {
+                let nodeTitle = event.target
+                if (nodeTitle.textLength > 0) {
+                    img.alt = nodeTitle.value;
+                };
+            });
+            //Add a category to an image of a work
+            inputCategory.addEventListener('change', event => {
+                let nodeCategory = event.target;
+                if (nodeCategory.value != "") {
+                    img.dataset.category = nodeCategory.selectedIndex;
+                };
+            });
+            // Setup the submit button for uploading a work
+            modal.addEventListener('change', event => {
+                if (inputFile.value != "" &&
+                    inputTitle.textLength > 0 &&
+                    inputCategory.value != "") {
+                    submitButton.classList.add("active-button");
+                    submitButton.addEventListener('click', event => {
+
+                        uploadNewWork(nodeImage);
+                    });
+
+                } else {
+                    submitButton.classList.remove("active-button");
+                    submitButton.removeEventListener('click', event);
+                };
+            });
+        };
+    });
+};
+
+
+async function uploadNewWork(nodeImage) {
+    const fileModal = document.querySelector(".upload-file-modal");
+    const imageUpload = document.querySelector('.image-upload');
+    let uploadImg = document.querySelector('.upload-img');
+    
+    const formData = new FormData();
+    formData.append('image', nodeImage[0]);
+    formData.append('title', uploadImg.alt);
+    formData.append('category', uploadImg.dataset.category);
+
+    const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
+    if(uploadNewWork) {
+
+        /*imageUpload.removeChild(uploadImg);*/
+        
+        fileModal.innerHTML = "";
+        uploadFileModal();
+        uploadFileContent();
+        displayImagePreview();
+        getWorks();
+
+        /*const newFigure = document.createElement('figure');
+        newFigure.dataset.category = uploadImg.category;
+
+        const newFigcaption = document.createElement('figcaption');
+                newFigcaption.textContent = uploadImg.alt;
+
+        const newImage = document.createElement('img')
+                newImage.src = uploadImg.src;
+                newImage.alt = uploadImg.alt;
+
+        newFigure.appendChild(newImage);
+        newFigure.appendChild(newFigcaption);
+
+        node_gallery.appendChild(newFigure);*/
+
+
+
+
+        
+       
+
+        //alert('Success !')
+        
+    } else {
+        alert('Something goes wrong !');
+    };
+};

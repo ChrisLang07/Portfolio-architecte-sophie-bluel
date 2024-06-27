@@ -29,6 +29,7 @@ function createWork(work) {
     figure.dataset.category = work.id;
     
     node_gallery.appendChild(figure);
+    
 };
 
 /**
