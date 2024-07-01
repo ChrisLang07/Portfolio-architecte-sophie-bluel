@@ -67,6 +67,15 @@ async function httpDelete(url, token) {
     };
 };
 
+/**
+ * 
+ * Make a HTTP POST Request
+ * 
+ * @param  String url 
+ * @param Object headers, the HTTP request headers options
+ * @param  formData, data you need to pass the request
+ * @returns 
+ */
 async function httpPostImage(url, token, formData) {
     try {
         const response = await fetch(url, {

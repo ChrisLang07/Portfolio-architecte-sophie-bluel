@@ -42,7 +42,7 @@ function modalAlertMessage() {
     const alert = document.querySelector("[rel=js-alert]");
 
     let span = document.createElement("span");
-    span.textContent = "Wrong Email and/or Password !";
+    span.textContent = "Mauvais E-mail et/ou mot de passe !";
 
     let button = document.createElement("button");
     button.setAttribute("type", "button");
@@ -69,7 +69,7 @@ function modalAlertMessage() {
  * Create admin menu
  */
 function createAdminMenu() {
-    const menuAdmin = document.querySelector("[rel=js-projects]");
+    const headlineTitle = document.querySelector(".headline-title");
 
     let menuLink = document.createElement("a");
         menuLink.setAttribute("href","#modal");
@@ -90,7 +90,7 @@ function createAdminMenu() {
         adminZone.appendChild(menuIcon);
         adminZone.appendChild(menuLink);
 
-        menuAdmin.appendChild(adminZone);
+        headlineTitle.appendChild(adminZone);
 
         displayModal();
     };

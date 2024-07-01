@@ -11,16 +11,16 @@ function displayModal() {
     const displayModal = document.querySelector('.modal-link');
     const modalPreviewGalleryllery = document.querySelector('.modal-preview-gallery');
     const uploadFileModal = document.querySelector('.upload-file-modal');
-    
+
     displayModal.addEventListener('click', event => {
-        
+
         darkBackground.style.display = 'flex';
         modal.style.display = 'block';
         modalPreviewGalleryllery.style.display = 'block';
         modalPreviewGalleryllery.innerHTML = '';
         uploadFileModal.style.display = 'none';
         uploadFileModal.innerHTML = '';
-        
+
         createCloseCross()
         getWorks()
     })
@@ -38,18 +38,18 @@ async function getWorks() {
  * 
  */
 function closeModal() {
-    
+
     darkBackground.addEventListener("click", event => {
 
         if (event.target.matches("#cross") ||
             !event.target.closest(".modal")) {
 
-            
+
             modal.style.display = "none";
             darkBackground.style.display = "none";
-            
+
         };
-        
+
     });
 };
 
@@ -93,7 +93,7 @@ function createPreviewGallery(works) {
 
 
     let divModalPreviewGallery = document.querySelector('.modal-preview-gallery');
-    
+
     divModalPreviewGallery.appendChild(span);
     divModalPreviewGallery.appendChild(divPreviewGallery);
     divModalPreviewGallery.appendChild(button);
@@ -101,10 +101,10 @@ function createPreviewGallery(works) {
     fillPreviewGallery(works);
 
     button.addEventListener('click', event => {
-        
+
         displayUploadModal();
-        
-       
+
+
     });
 };
 
@@ -172,27 +172,27 @@ function fillPreviewGallery(works) {
 };
 
 function uploadFileModal() {
-    
+
     let div = document.querySelector('.upload-file-modal');
-        
+
 
     let spanArrow = document.createElement('span');
-        spanArrow.classList.add('material-symbols-outlined');
-        spanArrow.classList.add('arrow-back')
-        spanArrow.textContent = 'arrow_back';
+    spanArrow.classList.add('material-symbols-outlined');
+    spanArrow.classList.add('arrow-back')
+    spanArrow.textContent = 'arrow_back';
 
     let spanTitle = document.createElement('span');
-        spanTitle.classList.add('gallery-title');
-        spanTitle.textContent = 'Ajouter photo';
+    spanTitle.classList.add('gallery-title');
+    spanTitle.textContent = 'Ajouter photo';
 
-    
-        div.appendChild(spanArrow);
-        div.appendChild(spanTitle);
-    
 
-         modal.appendChild(div);
+    div.appendChild(spanArrow);
+    div.appendChild(spanTitle);
 
-        backToModalPreviewGallery();
+
+    modal.appendChild(div);
+
+    backToModalPreviewGallery();
 }
 
 
@@ -202,127 +202,127 @@ function uploadFileModal() {
 function uploadFileContent() {
 
     let div = document.querySelector('.upload-file-modal');
-    
+
     let spanIcon = document.createElement('span');
-        spanIcon.classList.add('material-symbols-outlined');
-        spanIcon.classList.add('images-mode');
-        spanIcon.textContent = "imagesmode";
+    spanIcon.classList.add('material-symbols-outlined');
+    spanIcon.classList.add('images-mode');
+    spanIcon.textContent = 'imagesmode';
 
     let input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.classList.add("input-file");
+    input.setAttribute('type', 'file');
+    input.classList.add("input-file");
 
     let spanAdd = document.createElement('span');
-        spanAdd.textContent = "+ Ajouter photo";
-        
+    spanAdd.textContent = "+ Ajouter photo";
+
     let FileUpload = document.createElement('div');
-        FileUpload.classList.add('file-upload');
+    FileUpload.classList.add('file-upload');
 
     let spanExtensionSize = document.createElement('span');
-        spanExtensionSize.classList.add('pic-extension-size');
-        spanExtensionSize.textContent = "jpg, png : 4mo max";
-        
+    spanExtensionSize.classList.add('pic-extension-size');
+    spanExtensionSize.textContent = "jpg, png : 4mo max";
+
     let divUpload = document.createElement('div');
-        divUpload.classList.add("image-upload");
+    divUpload.classList.add('image-upload');
 
-        FileUpload.appendChild(input);
-        FileUpload.appendChild(spanAdd);
+    FileUpload.appendChild(input);
+    FileUpload.appendChild(spanAdd);
 
-        divUpload.appendChild(spanIcon);
-        divUpload.appendChild(FileUpload);
-        divUpload.appendChild(spanExtensionSize);
+    divUpload.appendChild(spanIcon);
+    divUpload.appendChild(FileUpload);
+    divUpload.appendChild(spanExtensionSize);
 
     let option = document.createElement('option');
-        option.value = "";
-        option.textContent = "";
+    option.value = '';
+    option.textContent = '';
 
     let optionObject = document.createElement('option');
-        optionObject.value = "Objets";
-        optionObject.textContent = "Objets"
-    
+    optionObject.value = 'Objets';
+    optionObject.textContent = 'Objets'
+
     let optionAppartments = document.createElement('option');
-        optionAppartments.value = "Appartements";
-        optionAppartments.textContent = "Appartements";
-        
+    optionAppartments.value = 'Appartements';
+    optionAppartments.textContent = 'Appartements';
+
     let optionHotel = document.createElement('option');
-        optionHotel.value = "Hôtel & restaurants";
-        optionHotel.textContent = "Hôtel & restaurants";
+    optionHotel.value = 'Hôtel & restaurants';
+    optionHotel.textContent = 'Hôtel & restaurants';
 
     let select = document.createElement('select');
-        select.classList.add('image-category');
-        select.setAttribute('name', 'category');
+    select.classList.add('image-category');
+    select.setAttribute('name', 'category');
 
-        select.appendChild(option);
-        select.appendChild(optionObject);
-        select.appendChild(optionAppartments);
-        select.appendChild(optionHotel);
+    select.appendChild(option);
+    select.appendChild(optionObject);
+    select.appendChild(optionAppartments);
+    select.appendChild(optionHotel);
 
     let labelCategory = document.createElement('label');
-        labelCategory.setAttribute('for', 'name');
-        labelCategory.textContent = 'Catégorie';
+    labelCategory.setAttribute('for', 'name');
+    labelCategory.textContent = 'Catégorie';
 
     let divImagePropertyCategory = document.createElement('div');
-        divImagePropertyCategory.classList.add('image-property--category');
+    divImagePropertyCategory.classList.add('image-property--category');
 
-        divImagePropertyCategory.appendChild(labelCategory);
-        divImagePropertyCategory.appendChild(select);
+    divImagePropertyCategory.appendChild(labelCategory);
+    divImagePropertyCategory.appendChild(select);
 
 
     let inputImageTitle = document.createElement('input');
-        inputImageTitle.classList.add('image-title');
-        inputImageTitle.setAttribute('type', 'text');
-        inputImageTitle.setAttribute('name', 'title');
+    inputImageTitle.classList.add('image-title');
+    inputImageTitle.setAttribute('type', 'text');
+    inputImageTitle.setAttribute('name', 'title');
 
     let labelTitle = document.createElement('label');
-        labelTitle.setAttribute('for', 'name');
-        labelTitle.textContent = 'Titre';
+    labelTitle.setAttribute('for', 'name');
+    labelTitle.textContent = 'Titre';
 
 
     let divImagePropertyTitle = document.createElement('div');
-        divImagePropertyTitle.classList.add('image-property--title');
+    divImagePropertyTitle.classList.add('image-property--title');
 
-        divImagePropertyTitle.appendChild(labelTitle);
-        divImagePropertyTitle.appendChild(inputImageTitle);
+    divImagePropertyTitle.appendChild(labelTitle);
+    divImagePropertyTitle.appendChild(inputImageTitle);
 
 
     let divPicSpecs = document.createElement('div');
-        divPicSpecs.classList.add('pic-specs');
+    divPicSpecs.classList.add('pic-specs');
 
-        divPicSpecs.appendChild(divImagePropertyTitle);
-        divPicSpecs.appendChild(divImagePropertyCategory);
+    divPicSpecs.appendChild(divImagePropertyTitle);
+    divPicSpecs.appendChild(divImagePropertyCategory);
 
     let form = document.createElement('form');
-        form.classList.add('submit-form');
+    form.classList.add('submit-form');
 
-        form.appendChild(divPicSpecs);
+    form.appendChild(divPicSpecs);
 
     let button = document.createElement('button');
-        button.setAttribute('type', 'submit');
-        button.classList.add('submit-image-button');
-        button.textContent = "Valider";    
+    button.setAttribute('type', 'submit');
+    button.classList.add('submit-image-button');
+    button.textContent = "Valider";
 
-    
-        div.appendChild(divUpload);
-        div.appendChild(form);
-        div.appendChild(button);
+
+    div.appendChild(divUpload);
+    div.appendChild(form);
+    div.appendChild(button);
 };
 
 function backToModalPreviewGallery() {
     const arrowBack = document.querySelector('.arrow-back');
     const modalPreviewGallery = document.querySelector('.modal-preview-gallery');
     const fileModal = document.querySelector('.upload-file-modal');
-    
-    
+
+
     arrowBack.addEventListener('click', event => {
-        
-        
+
+
         modalPreviewGallery.style.display = "block";
         modalPreviewGallery.innerHTML = '';
         getWorks();
         fileModal.style.display = 'none';
 
-        
-        
+
+
     })
 }
 
@@ -330,16 +330,17 @@ function displayUploadModal() {
     const modal = document.querySelector('.modal');
     const modalPreviewGallery = document.querySelector('.modal-preview-gallery');
     const fileModal = document.querySelector('.upload-file-modal');
-    
+
     modalPreviewGallery.style.display = "none";
     fileModal.style.display = 'block';
     fileModal.innerHTML = "";
-    
+
     uploadFileModal();
     uploadFileContent();
     displayImagePreview();
-    
-   
+    getWorks();
+
+
 }
 
 /**
@@ -356,28 +357,47 @@ function displayImagePreview() {
     inputFile.addEventListener('change', event => {
 
         let nodeImage = event.target.files;
-        
-        if (nodeImage.length > 0) {
+
+        if (nodeImage.length > 0 &&
+            nodeImage[0].type === 'image/png' ||
+            nodeImage[0].type === 'image/jpeg' &&
+            nodeImage[0].size <= '32000000') {
+
             fileUpload.classList.add('active');
             let img = document.createElement("img");
             img.src = URL.createObjectURL(nodeImage[0]);
             img.classList.add("upload-img");
 
             uploadZone.appendChild(img);
+
             // Add a title to an image of a work
             inputTitle.addEventListener('input', event => {
                 let nodeTitle = event.target
+
                 if (nodeTitle.textLength > 0) {
                     img.alt = nodeTitle.value;
-                };
+
+                } else {
+
+                    alert('Veuillez entrer un nom valide...');
+                }
             });
+
             //Add a category to an image of a work
             inputCategory.addEventListener('change', event => {
+
                 let nodeCategory = event.target;
-                if (nodeCategory.value != "") {
+
+                if (nodeCategory.value != '') {
                     img.dataset.category = nodeCategory.selectedIndex;
-                };
+
+                } else {
+
+                    alert('Veuillez choisir une catégorie...');
+
+                }
             });
+
             // Setup the submit button for uploading a work
             modal.addEventListener('change', event => {
                 if (inputFile.value != "" &&
@@ -391,7 +411,6 @@ function displayImagePreview() {
 
                 } else {
                     submitButton.classList.remove("active-button");
-                    submitButton.removeEventListener('click', event);
                 };
             });
         };
@@ -399,51 +418,68 @@ function displayImagePreview() {
 };
 
 
-async function uploadNewWork(nodeImage) {
+/**
+ * 
+ * Create a form Data of a work and make an HTTP POST request for uploadind a work
+ * 
+ * @param image, an image you need to upload 
+ */
+async function uploadNewWork(image) {
     const fileModal = document.querySelector(".upload-file-modal");
-    const imageUpload = document.querySelector('.image-upload');
-    let uploadImg = document.querySelector('.upload-img');
-    
+    const uploadImg = document.querySelector('.upload-img');
+
     const formData = new FormData();
-    formData.append('image', nodeImage[0]);
+    formData.append('image', image[0]);
     formData.append('title', uploadImg.alt);
     formData.append('category', uploadImg.dataset.category);
 
-    const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
-    if(uploadNewWork) {
 
-        /*imageUpload.removeChild(uploadImg);*/
-        
+    const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
+    if (uploadNewWork) {
+
+        alert('Envoyé !')
+
+        fileModal.innerHTML = "";
+        uploadFileModal();
+        uploadFileContent();
+        getWorks();
+        displayImagePreview();
+
+    } else {
+
+        alert('Une erreur s\'est produite...');
+
         fileModal.innerHTML = "";
         uploadFileModal();
         uploadFileContent();
         displayImagePreview();
-        getWorks();
 
-        /*const newFigure = document.createElement('figure');
-        newFigure.dataset.category = uploadImg.category;
-
-        const newFigcaption = document.createElement('figcaption');
-                newFigcaption.textContent = uploadImg.alt;
-
-        const newImage = document.createElement('img')
-                newImage.src = uploadImg.src;
-                newImage.alt = uploadImg.alt;
-
-        newFigure.appendChild(newImage);
-        newFigure.appendChild(newFigcaption);
-
-        node_gallery.appendChild(newFigure);*/
-
-
-
-
-        
-       
-
-        //alert('Success !')
-        
-    } else {
-        alert('Something goes wrong !');
     };
+};
+
+function message() {
+    const imageUpload = document.querySelector('.image-upload');
+
+    let span = document.createElement('span');
+    span.textContent = 'Taille ou format invalide !';
+
+    let button = document.createElement("button");
+    button.setAttribute('type', 'button');
+    button.classList.add('validation');
+    button.textContent = 'Ok';
+
+    let div = document.createElement('div');
+    div.classList.add('truc');
+
+
+    div.appendChild(span);
+    div.appendChild(button);
+
+    imageUpload.appendChild(div);
+    imageUpload.style.display = 'block';
+
+    button.addEventListener('click', event => {
+        imageUpload.style.display = 'none';
+        imageUpload.innerHTML = '';
+    });
 };

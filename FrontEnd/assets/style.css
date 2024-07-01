@@ -133,15 +133,18 @@ nav a {
 	position: relative;
 }
 
+.headline-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
 .projets-headline {
 	text-align: center;
-	margin-bottom: 1em;
 }
 
 .admin-menu {
-	position:absolute;
-	top: 543px;
-	right: 740px;
 	display: flex;
 	align-items: center;
 	gap: 20px;
