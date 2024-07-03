@@ -260,7 +260,33 @@ function uploadFileContent() {
     let labelCategory = document.createElement('label');
     labelCategory.setAttribute('for', 'name');
     labelCategory.textContent = 'Catégorie';
-
+    function modalAlertMessage(monMessage) {
+        const alert = document.querySelector("[rel=js-alert]");
+    
+        let span = document.createElement("span");
+        span.textContent = monMessage;
+    
+        let button = document.createElement("button");
+        button.setAttribute("type", "button");
+        button.classList.add("validation");
+        button.textContent = "Ok";
+    
+        let div = document.createElement("div");
+        div.classList.add("zone-text");
+    
+    
+        div.appendChild(span);
+        div.appendChild(button);
+    
+        alert.appendChild(div);
+        alert.style.display = "block";
+    
+        button.addEventListener("click", event => {
+            alert.style.display = "none";
+            alert.innerHTML = "";
+        })
+    };
+    
     let divImagePropertyCategory = document.createElement('div');
     divImagePropertyCategory.classList.add('image-property--category');
 
@@ -352,71 +378,118 @@ function displayImagePreview() {
     const inputTitle = document.querySelector(".image-title");
     const inputCategory = document.querySelector(".image-category");
     const submitButton = document.querySelector(".submit-image-button");
-    const fileUpload = document.querySelector('.file-upload');
+    //const fileUpload = document.querySelector('.file-upload');
+    let formIsOk = false;
+    let imgIsOk = false;
 
     inputFile.addEventListener('change', event => {
 
-        let nodeImage = event.target.files;
+        imgIsOk = controlImage(event, uploadZone);
 
-        if (nodeImage.length > 0 &&
-            nodeImage[0].type === 'image/png' ||
-            nodeImage[0].type === 'image/jpeg' &&
-            nodeImage[0].size <= '32000000') {
-
-            fileUpload.classList.add('active');
-            let img = document.createElement("img");
-            img.src = URL.createObjectURL(nodeImage[0]);
-            img.classList.add("upload-img");
-
-            uploadZone.appendChild(img);
-
-            // Add a title to an image of a work
-            inputTitle.addEventListener('input', event => {
-                let nodeTitle = event.target
-
-                if (nodeTitle.textLength > 0) {
-                    img.alt = nodeTitle.value;
-
-                } else {
-
-                    alert('Veuillez entrer un nom valide...');
-                }
-            });
-
-            //Add a category to an image of a work
-            inputCategory.addEventListener('change', event => {
-
-                let nodeCategory = event.target;
-
-                if (nodeCategory.value != '') {
-                    img.dataset.category = nodeCategory.selectedIndex;
-
-                } else {
-
-                    alert('Veuillez choisir une catégorie...');
-
-                }
-            });
-
-            // Setup the submit button for uploading a work
-            modal.addEventListener('change', event => {
-                if (inputFile.value != "" &&
-                    inputTitle.textLength > 0 &&
-                    inputCategory.value != "") {
-                    submitButton.classList.add("active-button");
-                    submitButton.addEventListener('click', event => {
-
-                        uploadNewWork(nodeImage);
-                    });
-
-                } else {
-                    submitButton.classList.remove("active-button");
-                };
-            });
-        };
     });
+
+    // Add a title to an image of a work
+    inputTitle.addEventListener('keyup', event => {
+        let nodeTitle = event.target
+
+        if (nodeTitle.textLength === 0) {
+            alert('Veuillez entrer un nom valide...');
+        }
+    });
+
+    //Add a category to an image of a work
+    inputCategory.addEventListener('change', event => {
+
+        let nodeCategory = event.target;
+
+        if (nodeCategory.value === '') {
+            alert('Veuillez choisir une catégorie...');
+
+        }
+    });
+
+    // Setup the submit button for uploading a work
+    modal.addEventListener('change', event => {
+
+        formIsOk = controlForm(inputFile, inputTitle, inputCategory, submitButton, imgIsOk);
+
+    });
+
+    // Event keyup
+    modal.addEventListener('keyup', event => {
+
+        formIsOk = controlForm(inputFile, inputTitle, inputCategory, submitButton, imgIsOk);
+
+    });
+
+    submitButton.addEventListener('click', event => {
+
+        console.log(formIsOk);
+
+        if (formIsOk) {
+
+            uploadNewWork(nodeImage);
+
+        }
+
+        else {
+
+            alert('Complétez le formulaire correctement')
+
+        }
+
+    });
+
 };
 
+function controlImage(event, uploadZone) {
+
+    let nodeImage = event.target.files;
+
+    if (
+        nodeImage.length > 0 &&
+        nodeImage[0].type === 'image/png' ||
+        nodeImage[0].type === 'image/jpeg' &&
+        nodeImage[0].size <= '32000000') {
+
+        //fileUpload.classList.add('active');
+        let img = document.createElement("img");
+        img.src = URL.createObjectURL(nodeImage[0]);
+        img.classList.add("upload-img");
+        img.alt = "Image-preview";
+
+        uploadZone.appendChild(img);
+
+        alert('Image valide');
+
+        return true;
+
+    };
+
+    alert('Image non valide');
+
+    return false;
+
+}
+
+function controlForm(inputFile, inputTitle, inputCategory, submitButton, imgIsOk) {
+
+    if (imgIsOk &&
+        inputFile.value != "" &&
+        inputTitle.textLength > 0 &&
+        inputCategory.value != "") {
+
+        submitButton.classList.add("active-button");
+
+        return true;
+
+    }
+
+    submitButton.classList.remove("active-button");
+
+    return false;
+
+}
 
 /**
  * 
@@ -432,6 +505,8 @@ async function uploadNewWork(image) {
     formData.append('image', image[0]);
     formData.append('title', uploadImg.alt);
     formData.append('category', uploadImg.dataset.category);
+
+    console.log(formData);
 
 
     const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);

@@ -1,32 +1,93 @@
-.darkbackground {
+.modal-backdrop {
     top: 0;
     left: 0;
-    display: none;
+    display: block;
     position: fixed;
     height: 100vh;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.333);
-    z-index: 99999;
+    z-index: 0;
     margin: 0;
     transition: all 0.5s;
 }
 
 .modal {
-    display: none;
+    display: block;
     background-color: #FFFFFF;
     border-radius: 10px;
     max-width: 630px;
-    width: 43%;
     min-height: 688px;
+    width: 56%;
     margin: auto;
-    position: relative;
+    position: fixed;
     box-sizing: border-box;
     text-align: center;
+    z-index: 1;
+    top: 10vh;
+    left: 33vw;
+}
+
+.modal-title {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-top: 50px;
+}
+
+.close-btn {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.close-btn:hover {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.25s all;
 }
 
 
+.modal-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 50px auto;
+    column-gap: 10px;
+    width: 67%;
+    border-bottom: 1px solid rgba(179, 179, 179, 1);
+    overflow-y: scroll;
+    padding-bottom: 70px;
+    border-bottom: 1px solid grey;
+    max-height: 345px;
+}
 
-.submit-button {
+.preview {
+    width: 18%;
+}
+
+.preview-img {
+    width: 100%;
+    object-fit: cover;
+}
+
+#trash {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 5px 3px;
+    top: 30px;
+    left: 50px;
+    color: #FFFFFF;
+    background-color: black;
+    z-index: 1;
+}
+
+
+.add-btn {
     font-size: 0.9rem;
     font-weight: 700;
     width: 38%;
@@ -37,19 +98,9 @@
     background-color: #1D6154;
 }
 
-#cross {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    top: 15px;
-    right: 15px;
-}
 
-#cross:hover {
-    cursor: pointer;
-    opacity: 0.5;
-    transition: 0.25s all;
-}
+
+
 
 .gallery-title {
     font-size: 1.6rem;
@@ -58,43 +109,17 @@
     margin-top: 50px;
 }
 
-.preview-gallery {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    margin: 50px auto;
-    row-gap: 30px;
-    column-gap: 10px;
-    width: 67%;
-    border-bottom: 1px solid rgba(179, 179, 179, 1);
-    overflow-y: scroll;
-    padding-bottom: 100px;
-    border-bottom: 1px solid grey;
-    max-height: 300px;
-}
-
 .modal-pic {
     position: relative;
 }
 
-.preview-gallery img {
-    width: 100%;
-    object-fit: cover;
-}
+
 
 .preview-img {
     position: relative;
 }
 
-#trash {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    padding: 5px 3px;
-    top: 3px;
-    right: 3px;
-    color: #FFFFFF;
-    background-color: black;
-}
+
 
 #trash:hover {
     cursor: pointer;
