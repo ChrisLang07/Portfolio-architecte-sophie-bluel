@@ -96,8 +96,8 @@ function createAdminMenu() {
 
         menuLink.addEventListener('click', event => {
             
-            ModalPreviewContent();
-            fillPreviewGallery(works);
+            modalPreviewContent();
+            
              
         }); 
     };
