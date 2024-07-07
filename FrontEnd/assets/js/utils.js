@@ -58,7 +58,7 @@ async function httpDelete(url, token) {
             headers: { 'Authorization': 'Bearer ' + token }
         });
 
-        return response.ok;
+        return response;
 
     }
     catch (error) {
@@ -86,9 +86,9 @@ async function httpPostImage(url, token, formData) {
             body: formData
         });
 
-        return response.ok;
+        return response.json();
     }
-    catch(error) {
+    catch (error) {
         alert("HTTP Error : " + error)
         return [];
     };
@@ -102,7 +102,7 @@ async function httpPostImage(url, token, formData) {
  * @param Object content 
  * @param Object footer 
  */
-function createModal(header=null, content=null, footer=null) {
+function createModal(header = null, content = null, footer = null) {
 
     let body = document.querySelector('body');
 
@@ -111,32 +111,32 @@ function createModal(header=null, content=null, footer=null) {
         modalCloseBtn.classList.add('close-btn');
         modalCloseBtn.textContent = 'X'
 
-    
+
     let modalHeader = document.createElement('div');
         modalHeader.classList.add('modal-title');
         modalHeader.append(header);
 
 
-   
+
     let modalContent = document.createElement('div');
         modalContent.classList.add('modal-content');
         modalContent.append(content);
-        
-          
-       
+
+
+
     let modalFooter = document.createElement('div');
         modalFooter.classList.add('modal-footer');
         modalFooter.append(footer);
-    
+
 
     let container = document.createElement('div');
         container.classList.add('modal');
         container.append(modalCloseBtn);
 
     if (header) {
-       container.append(modalHeader); 
+        container.append(modalHeader);
     }
-        
+
     if (content) {
         container.append(modalContent);
     };
@@ -146,7 +146,7 @@ function createModal(header=null, content=null, footer=null) {
     }
 
     let modal = document.createElement('div');
-        modal.classList.add('modal-backdrop');
+    modal.classList.add('modal-backdrop');
 
     body.append(modal);
     body.append(container);
@@ -159,24 +159,24 @@ function createModal(header=null, content=null, footer=null) {
  * Create the modal with a preview of each work
  */
 function modalPreviewContent() {
-    
-    const header = document.createElement('h2');
-    header.textContent = 'Gallery Photo';
-    
-    const content = fillPreviewGallery(works);
-    
-    
-    const footer = document.createElement('button');
-    footer.classList.add('add-btn');
-    footer.textContent = 'Ajouter photo';
-    footer.addEventListener('click', event => {
-        event.preventDefault();
-        displayUploadModal();
-    })
-    
+
+    let header = document.createElement('h2');
+        header.textContent = 'Gallery Photo';
+
+    let content = fillPreviewGallery();
+
+
+    let footer = document.createElement('button');
+        footer.classList.add('add-btn');
+        footer.textContent = 'Ajouter photo';
+        footer.addEventListener('click', event => {
+            event.preventDefault();
+            displayUploadModal();
+        });
+
     createModal(header, content, footer);
-    
-    
+
+
 }
 
 /**
@@ -185,46 +185,52 @@ function modalPreviewContent() {
  * 
  * @param Object work, a work from works 
  */
-function previewGallery(work) {
+function previewGallery(previewWork) {
 
-        
+
     let spanTrash = document.createElement("span");
         spanTrash.classList.add("material-symbols-outlined");
         spanTrash.setAttribute("rel", "js-trash");
-        spanTrash.setAttribute("id", "trash");    
-        spanTrash.textContent = "delete";    
-        spanTrash.dataset.category = work.id;            
-            
+        spanTrash.setAttribute("id", "trash");
+        spanTrash.textContent = "delete";
+        spanTrash.dataset.category = previewWork.dataset.category;
+
     let img = document.createElement('img');
         img.classList.add('preview-img');
-        img.src = work.imageUrl;
-        img.alt = work.title;
-        img.dataset.category = work.id;
+        img.src = previewWork.firstChild.src;
+        img.alt = previewWork.textContent
+        
 
     let figure = document.createElement('figure');
         figure.classList.add('preview');
-        figure.dataset.category = work.id;
+        figure.dataset.category = previewWork.dataset.category
 
         figure.append(spanTrash);
         figure.append(img);
-        
+
         spanTrash.addEventListener("click", event => {
-            
-            deletedWork(work.id);
+
+            deletedWork(previewWork.dataset.category);
         });
-        
-        return figure;
-        
+
+    return figure;
 };
 
-function fillPreviewGallery(works) {
+/**
+ * 
+ * Create content of the preview gallery
+ * 
+ * @returns nodeName
+ */
+function fillPreviewGallery() {
     const figureContent = document.createElement('div');
-
-    works.forEach((work)=> {
-        let preview = previewGallery(work);
-        figureContent.classList.add('content');
-        figureContent.append(preview);
-    });
+    const previewWorks = node_gallery.childNodes
+    
+    previewWorks.forEach(previewWork  => {
+        let preview = previewGallery(previewWork);
+            figureContent.classList.add('content');
+            figureContent.append(preview);
+    })
     
     return figureContent;
 };
@@ -237,14 +243,14 @@ function fillPreviewGallery(works) {
 function closeModal() {
     const modalBackdrop = document.querySelector('.modal-backdrop');
     const modal = document.querySelector('.modal');
-    const body = document.querySelector('body')
-    const closeBtn = document.querySelector('.close-btn')
-;
+    const body = document.querySelector('body');
+    const closeBtn = document.querySelector('.close-btn');
+        
     modalBackdrop.addEventListener('click', event => {
         event.stopImmediatePropagation();
 
-       body.removeChild(modalBackdrop);
-       body.removeChild(modal)
+        body.removeChild(modalBackdrop);
+        body.removeChild(modal)
 
     });
 
@@ -262,17 +268,16 @@ function closeModal() {
 async function deletedWork(id) {
 
     const deletedWork = await httpDelete(url_deleteWork + id, store.STORE_TOKEN);
-    const preview = document.querySelector('.preview');
-    const modalContent = document.querySelector('.modal-content');
+    const previewContent = document.querySelector('.content');
 
     let figure = node_gallery.querySelector('[data-category="' + id + '"]');
-    let previewToDel = modalContent.querySelector('[data-category="' + id + '"]');
-    
+    let previewToDel = previewContent.querySelector('[data-category="' + id + '"]');
+
     if (deletedWork) {
 
         node_gallery.removeChild(figure);
-        modalContent.removeChild(previewToDel);
-        
+        previewContent.removeChild(previewToDel);
+
     };
 };
 
@@ -280,221 +285,162 @@ async function deletedWork(id) {
  * Create the modal with a preview of each work
  */
 function modalPreviewUpload() {
-    
-    const header = document.createElement('h2');
-    header.textContent = 'Ajout Photo';
-    
-    const content = document.createElement('div');
-    content.classList.add('content');
-    const form = formUpload();
-    content.append(form);
-    
-    const footer = document.createElement('button');
-    footer.classList.add('valid-btn');
-    footer.classList.add('no-active');
-    footer.textContent = 'Valider';
+
+    let header = document.createElement('h2');
+        header.textContent = 'Ajout Photo';
+
+    let content = document.createElement('div');
+        content.classList.add('content');
+    let form = formUpload();
+        content.append(form);
+
+    let footer = document.createElement('button');
+        footer.classList.add('valid-btn');
+        footer.classList.add('no-active');
+        footer.textContent = 'Valider';
 
     createModal(header, content, footer);
-    
+
 }
 
+/**
+ * Create a arrow for the upload modal to back to the preview gallery
+ */
 function arrowBack() {
     const modalBackdrop = document.querySelector('.modal-backdrop');
     const modal = document.querySelector('.modal');
     const body = document.querySelector('body')
 
-    const arrowBack = document.createElement('span');
-    arrowBack.classList.add('material-symbols-outlined');
-    arrowBack.classList.add('arrow-back');
-    arrowBack.textContent = 'arrow_back';
+    let arrowBack = document.createElement('span');
+        arrowBack.classList.add('material-symbols-outlined');
+        arrowBack.classList.add('arrow-back');
+        arrowBack.textContent = 'arrow_back';
 
     modal.append(arrowBack);
-    const Arrow = document.querySelector('.arrow-back');
+
     arrowBack.addEventListener('click', event => {
-        
+
         body.removeChild(modalBackdrop);
         body.removeChild(modal)
 
         modalPreviewContent();
     })
-
-
-};
-
-
-
-function formUpload() {
-    
-    
-    let form = document.createElement('form');
-
-    let spanIcon = document.createElement('span');
-    spanIcon.classList.add('material-symbols-outlined');
-    spanIcon.classList.add('images-mode');
-    spanIcon.textContent = 'imagesmode';
-
-    let input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.classList.add("input-file");
-
-    let spanAdd = document.createElement('span');
-    spanAdd.textContent = "+ Ajouter photo";
-
-    let FileUpload = document.createElement('div');
-    FileUpload.classList.add('file-upload');
-
-    let spanExtensionSize = document.createElement('span');
-    spanExtensionSize.classList.add('pic-extension-size');
-    spanExtensionSize.textContent = "jpg, png : 4mo max";
-
-    let divUpload = document.createElement('div');
-    divUpload.classList.add('image-upload');
-
-    let inputImageTitle = document.createElement('input');
-    inputImageTitle.classList.add('image-title');
-    inputImageTitle.setAttribute('type', 'text');
-    inputImageTitle.setAttribute('name', 'title');
-
-    let labelTitle = document.createElement('label');
-    labelTitle.setAttribute('for', 'name');
-    labelTitle.textContent = 'Titre';
-    
-    let divImagePropertyTitle = document.createElement('div');
-    divImagePropertyTitle.classList.add('image-property--title');
-
-    divImagePropertyTitle.appendChild(labelTitle);
-    divImagePropertyTitle.appendChild(inputImageTitle);
-
-    let divPicSpecs = document.createElement('div');
-    divPicSpecs.classList.add('pic-specs');
-
-    let divImagePropertyCategory = document.createElement('div');
-    divImagePropertyCategory.classList.add('image-property--category');
-
-    let labelCategory = document.createElement('label');
-    labelCategory.setAttribute('for', 'name');
-    labelCategory.textContent = 'Catégorie';
-
-    let option = document.createElement('option');
-    option.value = '';
-    option.textContent = '';
-
-    let optionObject = document.createElement('option');
-    optionObject.value = 'Objets';
-    optionObject.textContent = 'Objets'
-
-    let optionAppartments = document.createElement('option');
-    optionAppartments.value = 'Appartements';
-    optionAppartments.textContent = 'Appartements';
-
-    let optionHotel = document.createElement('option');
-    optionHotel.value = 'Hôtel & restaurants';
-    optionHotel.textContent = 'Hôtel & restaurants';
-
-    let select = document.createElement('select');
-    select.classList.add('image-category');
-    select.setAttribute('name', 'category');
-
-    divImagePropertyCategory.appendChild(labelCategory);
-    divImagePropertyCategory.appendChild(select);
-
-    divPicSpecs.appendChild(divImagePropertyTitle);
-    divPicSpecs.appendChild(divImagePropertyCategory);
-
-    FileUpload.appendChild(input);
-    FileUpload.appendChild(spanAdd);
-
-    divUpload.appendChild(spanIcon);
-    divUpload.appendChild(FileUpload);
-    divUpload.appendChild(spanExtensionSize);
-
-    select.appendChild(option);
-    select.appendChild(optionObject);
-    select.appendChild(optionAppartments);
-    select.appendChild(optionHotel);
-
-    form.append(divUpload);
-    form.append(divPicSpecs);
-    form.append(divImagePropertyCategory);
-
-    return form;
 };
 
 /**
- * Display the image preview
+ * 
+ * Create a form to submit a new work
+ * 
+ * @returns nodeName
  */
-function displayImagePreview() {
-    const uploadZone = document.querySelector(".image-upload");
-    const inputFile = document.querySelector(".input-file");
-    const inputTitle = document.querySelector(".image-title");
-    const inputCategory = document.querySelector(".image-category");
-    const submitButton = document.querySelector(".valid-btn");
-    const modal = document.querySelector('.modal');
-    //const fileUpload = document.querySelector('.file-upload');
-    let formIsOk = false;
-    let nodeImageOk = false;
 
-    inputFile.addEventListener('change', event => {
+function formUpload() {
+    
+    let form = document.createElement('form');
+        form.classList.add('form-upload');
 
-        nodeImageOk = controlImage(event, uploadZone);
-        
-    });
+    let spanIcon = document.createElement('span');
+        spanIcon.classList.add('material-symbols-outlined');
+        spanIcon.classList.add('images-mode');
+        spanIcon.textContent = 'imagesmode';
 
-    // Add a title to an image of a work
-    inputTitle.addEventListener('keyup', event => {
-        let nodeTitle = event.target
-       
-        if (nodeTitle.textLength === 0) {
-            alert('Veuillez entrer un nom valide...');
-        };
-    });
+    let input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.classList.add("input-file");
 
-    //Add a category to an image of a work
-    inputCategory.addEventListener('change', event => {
+    let spanAdd = document.createElement('span');
+        spanAdd.textContent = "+ Ajouter photo";
 
-        let nodeCategory = event.target;
+    let FileUpload = document.createElement('div');
+        FileUpload.classList.add('file-upload');
 
-        if (nodeCategory.value === '') {
-            
-            alert('Veuillez choisir une catégorie...');
-        };
-    });
+    let spanExtensionSize = document.createElement('span');
+        spanExtensionSize.classList.add('pic-extension-size');
+        spanExtensionSize.textContent = "jpg, png : 4mo max";
 
-    // Event change
-    modal.addEventListener('change', event => {
-        
-        formIsOk = controlForm(inputFile, inputTitle, inputCategory, submitButton, nodeImageOk);
+    let divUpload = document.createElement('div');
+        divUpload.classList.add('image-upload');
 
-    });
+    let inputImageTitle = document.createElement('input');
+        inputImageTitle.classList.add('image-title');
+        inputImageTitle.setAttribute('type', 'text');
+        inputImageTitle.setAttribute('name', 'title');
 
-    // Event keyup
-    modal.addEventListener('keyup', event => {
-          
-        formIsOk = controlForm(inputFile, inputTitle, inputCategory, submitButton, nodeImageOk);
+    let labelTitle = document.createElement('label');
+        labelTitle.setAttribute('for', 'name');
+        labelTitle.textContent = 'Titre';
 
-    });
-    // Submit image to upload it
-    submitButton.addEventListener('click', event => {
+    let divImagePropertyTitle = document.createElement('div');
+        divImagePropertyTitle.classList.add('image-property--title');
 
-        if (formIsOk) {
+        divImagePropertyTitle.appendChild(labelTitle);
+        divImagePropertyTitle.appendChild(inputImageTitle);
 
-            uploadNewWork(nodeImageOk);
+    let divPicSpecs = document.createElement('div');
+        divPicSpecs.classList.add('pic-specs');
 
-        }
+    let divImagePropertyCategory = document.createElement('div');
+        divImagePropertyCategory.classList.add('image-property--category');
 
-        else {
+    let labelCategory = document.createElement('label');
+        labelCategory.setAttribute('for', 'name');
+        labelCategory.textContent = 'Catégorie';
 
-            alert('Complétez le formulaire correctement')
+    let option = document.createElement('option');
+        option.value = '';
+        option.textContent = '';
 
-        }
-    });
+    let optionObject = document.createElement('option');
+        optionObject.value = 'Objets';
+        optionObject.textContent = 'Objets'
+
+    let optionAppartments = document.createElement('option');
+        optionAppartments.value = 'Appartements';
+        optionAppartments.textContent = 'Appartements';
+
+    let optionHotel = document.createElement('option');
+        optionHotel.value = 'Hôtel & restaurants';
+        optionHotel.textContent = 'Hôtel & restaurants';
+
+    let select = document.createElement('select');
+        select.classList.add('image-category');
+        select.setAttribute('name', 'category');
+
+        divImagePropertyCategory.appendChild(labelCategory);
+        divImagePropertyCategory.appendChild(select);
+
+        divPicSpecs.appendChild(divImagePropertyTitle);
+        divPicSpecs.appendChild(divImagePropertyCategory);
+
+        FileUpload.appendChild(input);
+        FileUpload.appendChild(spanAdd);
+
+        divUpload.appendChild(spanIcon);
+        divUpload.appendChild(FileUpload);
+        divUpload.appendChild(spanExtensionSize);
+
+        select.appendChild(option);
+        select.appendChild(optionObject);
+        select.appendChild(optionAppartments);
+        select.appendChild(optionHotel);
+
+        form.append(divUpload);
+        form.append(divPicSpecs);
+        form.append(divImagePropertyCategory);
+
+        return form;
 };
 
-
+/**
+ * 
+ * Things event 
+ * nodeName uploadZone 
+ * @returns FileList from the event
+ */
 function controlImage(event, uploadZone) {
     
     let nodeImage = event.target.files;
-    
+
     if (
         nodeImage.length > 0 &&
         nodeImage[0].type === 'image/png' ||
@@ -502,13 +448,12 @@ function controlImage(event, uploadZone) {
         nodeImage[0].size <= '32000000') {
 
         //fileUpload.classList.add('active');
-        let img = document.createElement("img");
+        let img = document.createElement('img');
         img.src = URL.createObjectURL(nodeImage[0]);
-        img.classList.add("upload-img");
-        
-
+        img.classList.add('upload-img');
+        uploadZone.innerHTML = '';
         uploadZone.appendChild(img);
-
+            
         return nodeImage;
     };
 
@@ -517,84 +462,177 @@ function controlImage(event, uploadZone) {
     return false;
 };
 
-function controlForm(inputFile, inputTitle, inputCategory, submitButton, imgIsOk) {
-
-    if (imgIsOk &&
-        inputFile.value != "" &&
+/**
+ * 
+ *  nodeName
+ *  nodeName 
+ *  nodeName
+ *  nodeName
+ * @param nodeImageOk, a fileList from event of the upload form
+ * @returns 
+ */
+function controlForm(inputFile, inputTitle, inputCategory, submitButton, nodeImageOk) {
+console.log(nodeImageOk)
+    if (nodeImageOk &&
+        inputFile.value != '' &&
         inputTitle.textLength > 0 &&
-        inputCategory.value != "") {
+        inputCategory.value != '') {
 
-        submitButton.classList.add("active-button");
-
+        submitButton.classList.remove('no-active');
         return true;
 
     }
 
-    submitButton.classList.remove("active-button");
+    submitButton.classList.add('no-active');
 
     return false;
+};
 
-}
+/**
+ * Display the image preview
+ */
+function imagePreview() {
+
+    const inputFile = document.querySelector(".input-file");
+    const inputTitle = document.querySelector(".image-title");
+    const inputCategory = document.querySelector(".image-category");
+    const submitButton = document.querySelector(".valid-btn");
+    const modal = document.querySelector('.modal');
+    const uploadZone = document.querySelector('.image-upload');
+
+    let formIsOk = false;
+    let nodeImageOk = false;
+
+    // Add an image's work
+    inputFile.addEventListener('change', event => {
+        
+        nodeImageOk = controlImage(event, uploadZone);
+    });
+
+    // Add a title to an image of a work
+    inputFile.addEventListener('keyup', event => {
+
+        let nodeTitle = event.target;
+
+        if (nodeTitle.textLength === 0) {
+            alert('veuillez entrer un titre valide !');
+        };
+    });
+
+    // Add a category to an image of a work
+    inputCategory.addEventListener('change', event => {
+        let nodeCategory = event.target;
+
+        if (nodeCategory.value === '') {
+            alert('Veuillez choisir une catégorie !');
+        };
+    });
+
+    // Event change
+    modal.addEventListener('change', event => {
+
+        formIsOk = controlForm(inputFile, inputTitle, inputCategory, submitButton, nodeImageOk);
+    });
+
+    // Submit image to upload it
+    submitButton.addEventListener('click', event => {
+
+        if (formIsOk) {
+
+            const formData = new FormData();
+            formData.set('image', nodeImageOk[0]);
+            formData.set('title', inputTitle.value);
+            formData.set('category', inputCategory.selectedIndex);
+
+            uploadNewWork(formData);
+
+        }
+        
+        else {
+
+            alert('Complétez le formulaire correctement')
+
+        };
+    });
+};
 
 /**
  * 
  * Create a form Data of a work and make an HTTP POST request for uploadind a work
  * 
- * @param image, an image you need to upload 
+ * @param , formData, image data you need to upload 
  */
-async function uploadNewWork(image) {
+async function uploadNewWork(formData) {
     const modalBackdrop = document.querySelector('.modal-backdrop');
     const modal = document.querySelector('.modal');
     const body = document.querySelector('body')
-    const uploadImg = document.querySelector('.upload-img');
-
-    const formData = new FormData();
-    formData.append('image', image[0]);
-    formData.append('title', uploadImg.alt);
-    formData.append('category', uploadImg.dataset.category);
-
-    console.log(formData);
-
-
+    
     const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
+       
     if (uploadNewWork) {
 
-        alert('Envoyé !')
+        alert('Succès !')
 
+        updateWorks(uploadNewWork);
         body.removeChild(modalBackdrop);
         body.removeChild(modal);
         modalPreviewUpload();
-        displayImagePreview();
+        imagePreview()
         arrowBack();
-
+        
     } else {
 
         alert('Une erreur s\'est produite...');
-
-        
+    
         body.removeChild(modalBackdrop);
         body.removeChild(modal);
         modalPreviewUpload();
-        displayImagePreview();
+        imagePreview()
         arrowBack();
-
     };
 };
 
-
+/**
+ * Display the upload modal for upload an image of a new work
+ */
 function displayUploadModal() {
-    const addBtn = document.querySelector('.add-btn');
+    
     const body = document.querySelector('body');
     const modalBackdrop = document.querySelector('.modal-backdrop');
     const modal = document.querySelector('.modal');
-            
+
     body.removeChild(modal);
     body.removeChild(modalBackdrop);
-            
+
     modalPreviewUpload();
     formUpload();
     arrowBack();
     closeModal();
-    displayImagePreview();        
+    imagePreview();
+};
+
+/**
+ * 
+ * Update gallery of works after uploading a new work
+ * 
+ * @param Object uploadNewWork 
+ */
+function updateWorks(uploadNewWork) {
     
+    const node_gallery = document.querySelector('[rel=js-gallery]');
+    
+    let img = document.createElement('img');
+        img.src = uploadNewWork.imageUrl;
+        img.alt = uploadNewWork.title;
+
+    let figcaption = document.createElement('figcaption');
+        figcaption.textContent = uploadNewWork.title;
+
+    let figure = document.createElement('figure');
+        figure.classList.add('work');
+        figure.dataset.category = uploadNewWork.id;
+
+        figure.append(img);
+        figure.append(figcaption);
+        node_gallery.append(figure);
 };

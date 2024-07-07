@@ -44,7 +44,7 @@ function createWork(work) {
     img.alt = work.title
 
     let figure = document.createElement("figure");
-    figure.classList.add('figure-work')
+    figure.classList.add('work')
     figure.appendChild(img);
     figure.appendChild(figcaption);
     figure.dataset.category = work.id;
