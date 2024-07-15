@@ -2,11 +2,13 @@
 
 const node_gallery = document.querySelector("[rel=js-gallery]");
 const node_filters = document.querySelector("[rel=js-filters]");
-
-
 let works = [];
 let categories = [];
 
+/**
+ * Get works and categories to fill gallery
+ * 
+ */
 (async () => {
 
     // Get data
@@ -14,7 +16,6 @@ let categories = [];
     works = await httpGet(url_works);
 
     // Create Categories
-    
     createFilter({ id: 0, name: 'Tous' });
     categories.forEach(category => createFilter(category));
 
@@ -31,30 +32,85 @@ let categories = [];
 })();
 
 /**
+ * 
+ * Fill the preview gallery with work
+ * 
+ * @param Object work, a work from works 
+ * 
+ * @returns HTML element 
+ * 
+ */
+function previewGallery(previewWork) {
+    let spanTrash = document.createElement("span");
+        spanTrash.classList.add("material-symbols-outlined");
+        spanTrash.setAttribute("rel", "js-trash");
+        spanTrash.setAttribute("id", "trash");
+        spanTrash.textContent = "delete";
+        spanTrash.dataset.category = previewWork.dataset.category;
+
+    let img = document.createElement('img');
+        img.classList.add('preview-img');
+        img.src = previewWork.firstChild.src;
+        img.alt = previewWork.textContent
+        
+
+    let figure = document.createElement('figure');
+        figure.classList.add('preview');
+        figure.dataset.category = previewWork.dataset.category
+
+        figure.append(spanTrash);
+        figure.append(img);
+
+        spanTrash.addEventListener("click", event => {
+
+            deletedWork(previewWork.dataset.category);
+        });
+
+    return figure;
+};
+
+/**
+ * 
+ * Create content of the preview gallery
+ * 
+ */
+function fillPreviewGallery() {
+    const figureContent = document.createElement('div');
+    const previewWorks = node_gallery.childNodes
+    
+    previewWorks.forEach(previewWork  => {
+        let preview = previewGallery(previewWork);
+            figureContent.classList.add('content');
+            figureContent.append(preview);
+    })
+    
+    return figureContent;
+};
+
+/**
  * Create the HTML of a work
  * 
  * @param Object work, a work data
  */
 function createWork(work) {
     let figcaption = document.createElement("figcaption");
-    figcaption.textContent = work.title
+        figcaption.textContent = work.title
 
     let img = document.createElement("img");
-    img.src = work.imageUrl;
-    img.alt = work.title
+        img.src = work.imageUrl;
+        img.alt = work.title
 
     let figure = document.createElement("figure");
-    figure.classList.add('work')
-    figure.appendChild(img);
-    figure.appendChild(figcaption);
-    figure.dataset.category = work.id;
+        figure.classList.add('work')
+        figure.appendChild(img);
+        figure.appendChild(figcaption);
+        figure.dataset.category = work.id;
     
-    node_gallery.appendChild(figure);
-    
+        node_gallery.appendChild(figure);
 };
 
 /**
- * Add works on .gallery
+ * Add works to gallery
  * 
  * @params Array works
  */
@@ -64,7 +120,7 @@ function fillGallery(works) {
 };
 
 /**
- * Reset the .gallery elements
+ * Reset the gallery elements
  */
 function resetGallery() {
     node_gallery.innerHTML = "";
@@ -77,9 +133,6 @@ function resetGallery() {
  * @param filter, a filter to sort works
  */
 function createFilter(filter) {
-
-    
-
     let li = document.createElement('li');
         li.classList.add('filter-tag');
         li.dataset.category = filter.id;
@@ -99,6 +152,7 @@ function createFilter(filter) {
 
         fillGallery(filteredWorks);
     });
+    
     node_filters.append(li);
 };
 
@@ -115,9 +169,90 @@ filters.forEach(filter => {
 })
 };
 
-
+/**
+ * Remove filters from main page of works
+ */
 function removeFilters() {
 node_filters.innerHTML = "";
 };
 
+/**
+ * 
+ * Reset the upload form
+ * 
+ * @param HTML node element body 
+ * @param HTML node element modalBackdrop 
+ * @param HTML node element modal 
+ */
+function resetUploadForm(body, modalBackdrop, modal) {
+    body.removeChild(modalBackdrop);
+    body.removeChild(modal);
+        
+    // Create the upload modal
+    modalPreviewUpload();
+    
+    // Create a display zone for an image preview 
+    imagePreview()
+    
+    // Create the modal back arrow
+    arrowBack();
+};
 
+/**
+ * 
+ * Make an upload of a work
+ * 
+ * @param , formData, image data you need to upload 
+ */
+async function uploadNewWork(formData) {
+    const modalBackdrop = document.querySelector('.modal-backdrop');
+    const modal = document.querySelector('.modal');
+    const body = document.querySelector('body')
+    const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
+       
+    if (uploadNewWork) {
+
+        // Create an alert message for successfully upload
+        modalAlertMessage('Succès !');
+        
+        // Add the upload work to works
+        updateWorks(uploadNewWork);
+        
+        // Reset the upload form
+        resetUploadForm(body, modalBackdrop, modal);
+        
+    } else {
+        
+        // Create an alert message when an error is occur
+        modalAlertMessage('Une erreur s\'est produite !');
+        
+        // Reset the upload form
+        resetUploadForm(body, modalBackdrop, modal);
+    };
+};
+
+/**
+ * 
+ * Update gallery of works after uploading a new work
+ * 
+ * @param Object uploadNewWork, the new work you need to upload
+ */
+function updateWorks(uploadNewWork) {
+    
+    const node_gallery = document.querySelector('[rel=js-gallery]');
+    
+    let img = document.createElement('img');
+        img.src = uploadNewWork.imageUrl;
+        img.alt = uploadNewWork.title;
+
+    let figcaption = document.createElement('figcaption');
+        figcaption.textContent = uploadNewWork.title;
+
+    let figure = document.createElement('figure');
+        figure.classList.add('work');
+        figure.dataset.category = uploadNewWork.id;
+
+        figure.append(img);
+        figure.append(figcaption);
+        node_gallery.append(figure);
+};

@@ -1,10 +1,10 @@
 "use strict"
 
 const url_login = "http://localhost:5678/api/users/login";
-
 const auth = document.querySelector("[name=authentification]");
 const email = document.querySelector('email');
 const password = document.querySelector('password');
+const navStatus = document.querySelector("[rel=js-status]");
 let store = sessionStorage;
 
 /**
@@ -24,8 +24,9 @@ auth?.addEventListener("submit", async (event) => {
     const response = await httpPostJson(url_login, data, headers);
 
     if (!response.userId) {
-        const monMessage = "Mauvais E-mail et/ou mot de passe !";
-        modalAlertMessage(monMessage);
+       
+        const errorMessage = "Mauvais E-mail et/ou mot de passe !";
+        modalAlertMessage(errorMessage);
         return;
     };
 
@@ -37,14 +38,16 @@ auth?.addEventListener("submit", async (event) => {
 });
 
 /**
- * Create an alert message for wrong and/or email/password
+ * Create an alert message
+ * 
+ * @param String myMessage, the message displayed
  */
 
-function modalAlertMessage(monMessage) {
-    const alert = document.querySelector("[rel=js-alert]");
+function modalAlertMessage(myMessage) {
+    const main = document.querySelector('main');
 
     let span = document.createElement("span");
-    span.textContent = monMessage;
+    span.textContent = myMessage;
 
     let button = document.createElement("button");
     button.setAttribute("type", "button");
@@ -52,19 +55,18 @@ function modalAlertMessage(monMessage) {
     button.textContent = "Ok";
 
     let div = document.createElement("div");
-    div.classList.add("zone-text");
-
+    div.classList.add("zone-alert");
+    div.style.display = "flex";
 
     div.appendChild(span);
     div.appendChild(button);
 
-    alert.appendChild(div);
-    alert.style.display = "block";
-
+    main.appendChild(div);
+    
     button.addEventListener("click", event => {
-        alert.style.display = "none";
-        alert.innerHTML = "";
-    })
+        
+        main.removeChild(div);
+    });
 };
 
 /**
@@ -97,12 +99,8 @@ function createAdminMenu() {
         menuLink.addEventListener('click', event => {
             
             modalPreviewContent();
-            
-             
         }); 
     };
-
-const navStatus = document.querySelector("[rel=js-status]");
 
 function logout() {
     store.removeItem("STORE_TOKEN");  

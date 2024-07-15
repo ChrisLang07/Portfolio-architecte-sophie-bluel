@@ -71,9 +71,9 @@ async function httpDelete(url, token) {
  * 
  * Make a HTTP POST Request
  * 
- * @param  String url 
+ * @param String url 
  * @param Object headers, the HTTP request headers options
- * @param  formData, data you need to pass the request
+ * @param formData, data you need to pass the request
  * @returns 
  */
 async function httpPostImage(url, token, formData) {
@@ -103,7 +103,6 @@ async function httpPostImage(url, token, formData) {
  * @param Object footer 
  */
 function createModal(header = null, content = null, footer = null) {
-
     let body = document.querySelector('body');
 
     let modalCloseBtn = document.createElement('button');
@@ -111,23 +110,17 @@ function createModal(header = null, content = null, footer = null) {
         modalCloseBtn.classList.add('close-btn');
         modalCloseBtn.textContent = 'X'
 
-
     let modalHeader = document.createElement('div');
         modalHeader.classList.add('modal-title');
         modalHeader.append(header);
-
-
 
     let modalContent = document.createElement('div');
         modalContent.classList.add('modal-content');
         modalContent.append(content);
 
-
-
     let modalFooter = document.createElement('div');
         modalFooter.classList.add('modal-footer');
         modalFooter.append(footer);
-
 
     let container = document.createElement('div');
         container.classList.add('modal');
@@ -152,14 +145,12 @@ function createModal(header = null, content = null, footer = null) {
     body.append(container);
 
     closeModal();
-
 };
 
 /**
  * Create the modal with a preview of each work
  */
 function modalPreviewContent() {
-
     let header = document.createElement('h2');
         header.textContent = 'Gallery Photo';
 
@@ -175,64 +166,6 @@ function modalPreviewContent() {
         });
 
     createModal(header, content, footer);
-
-
-}
-
-/**
- * 
- * Fill the preview gallery with work
- * 
- * @param Object work, a work from works 
- */
-function previewGallery(previewWork) {
-
-
-    let spanTrash = document.createElement("span");
-        spanTrash.classList.add("material-symbols-outlined");
-        spanTrash.setAttribute("rel", "js-trash");
-        spanTrash.setAttribute("id", "trash");
-        spanTrash.textContent = "delete";
-        spanTrash.dataset.category = previewWork.dataset.category;
-
-    let img = document.createElement('img');
-        img.classList.add('preview-img');
-        img.src = previewWork.firstChild.src;
-        img.alt = previewWork.textContent
-        
-
-    let figure = document.createElement('figure');
-        figure.classList.add('preview');
-        figure.dataset.category = previewWork.dataset.category
-
-        figure.append(spanTrash);
-        figure.append(img);
-
-        spanTrash.addEventListener("click", event => {
-
-            deletedWork(previewWork.dataset.category);
-        });
-
-    return figure;
-};
-
-/**
- * 
- * Create content of the preview gallery
- * 
- * @returns nodeName
- */
-function fillPreviewGallery() {
-    const figureContent = document.createElement('div');
-    const previewWorks = node_gallery.childNodes
-    
-    previewWorks.forEach(previewWork  => {
-        let preview = previewGallery(previewWork);
-            figureContent.classList.add('content');
-            figureContent.append(preview);
-    })
-    
-    return figureContent;
 };
 
 /**
@@ -326,34 +259,86 @@ function arrowBack() {
         modalPreviewContent();
     })
 };
+/**
+ * 
+ * Create an HTML element <input>
+ * 
+ * @param String className, sets the value of the class attribute
+ * @param String type, the type of form control
+ * @param String name, the name associated with the control
+ * 
+ * @returns <input> HTML element
+ */
+function createInput(className, type, name) {
+    let input = document.createElement('input');
+        input.className = className;
+        input.type = type;
+        input.name = name;
+
+        return input;
+};
+
+/**
+ * 
+ * @param String attribute  
+ * @param String text
+ *  
+ * @returns <label> HTML element
+ */
+function createLabel(attribute, text) {
+    let label = document.createElement('label');
+        label.setAttribute('for', attribute);
+        label.textContent = text;
+
+    return label;
+};
+
+/**
+ * 
+ * @param String className 
+ * @param String name 
+ * @param Array neededOptions
+ * 
+ * @returns <select> HTML element
+ */
+function createSelect(className, name, neededOptions) {
+    let select = document.createElement('select');
+        select.className = className;
+        select.setAttribute('name', name);
+
+    neededOptions.forEach((neededOption) => {
+        let option = document.createElement('option');
+            option.value = neededOption;
+            option.textContent = neededOption;
+
+        select.append(option);
+        });
+        
+        return select;
+};
 
 /**
  * 
  * Create a form to submit a new work
  * 
- * @returns nodeName
  */
-
 function formUpload() {
+    // Menu options for the HTML element <select>
+    let neededOptions = ['', 'objets', 'Appartement', 'Hôtels & restaurants']
     
-    let form = document.createElement('form');
-        form.classList.add('form-upload');
-
     let spanIcon = document.createElement('span');
         spanIcon.classList.add('material-symbols-outlined');
         spanIcon.classList.add('images-mode');
         spanIcon.textContent = 'imagesmode';
-
-    let input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.classList.add("input-file");
-
+    
+    let input = createInput('input-file', 'file', 'file');
+    
     let spanAdd = document.createElement('span');
         spanAdd.textContent = "+ Ajouter photo";
 
     let FileUpload = document.createElement('div');
         FileUpload.classList.add('file-upload');
-
+    
     let spanExtensionSize = document.createElement('span');
         spanExtensionSize.classList.add('pic-extension-size');
         spanExtensionSize.textContent = "jpg, png : 4mo max";
@@ -361,14 +346,9 @@ function formUpload() {
     let divUpload = document.createElement('div');
         divUpload.classList.add('image-upload');
 
-    let inputImageTitle = document.createElement('input');
-        inputImageTitle.classList.add('image-title');
-        inputImageTitle.setAttribute('type', 'text');
-        inputImageTitle.setAttribute('name', 'title');
+    let labelTitle = createLabel('name', 'Titre')
 
-    let labelTitle = document.createElement('label');
-        labelTitle.setAttribute('for', 'name');
-        labelTitle.textContent = 'Titre';
+    let inputImageTitle = createInput('image-title', 'text', 'title');     
 
     let divImagePropertyTitle = document.createElement('div');
         divImagePropertyTitle.classList.add('image-property--title');
@@ -382,60 +362,41 @@ function formUpload() {
     let divImagePropertyCategory = document.createElement('div');
         divImagePropertyCategory.classList.add('image-property--category');
 
-    let labelCategory = document.createElement('label');
-        labelCategory.setAttribute('for', 'name');
-        labelCategory.textContent = 'Catégorie';
+    let labelCategory = createLabel('name', 'Catégorie');
+    
+    let select = createSelect('image-category', 'category', neededOptions);
 
-    let option = document.createElement('option');
-        option.value = '';
-        option.textContent = '';
+    let form = document.createElement('form');
+        form.classList.add('form-upload');
 
-    let optionObject = document.createElement('option');
-        optionObject.value = 'Objets';
-        optionObject.textContent = 'Objets'
+    FileUpload.appendChild(input);
+    FileUpload.appendChild(spanAdd);
 
-    let optionAppartments = document.createElement('option');
-        optionAppartments.value = 'Appartements';
-        optionAppartments.textContent = 'Appartements';
+    divUpload.appendChild(spanIcon);
+    divUpload.appendChild(FileUpload);
+    divUpload.appendChild(spanExtensionSize);
 
-    let optionHotel = document.createElement('option');
-        optionHotel.value = 'Hôtel & restaurants';
-        optionHotel.textContent = 'Hôtel & restaurants';
+    divImagePropertyCategory.appendChild(labelCategory);
+    divImagePropertyCategory.appendChild(select);
 
-    let select = document.createElement('select');
-        select.classList.add('image-category');
-        select.setAttribute('name', 'category');
+    divPicSpecs.appendChild(divImagePropertyTitle);
+    divPicSpecs.appendChild(divImagePropertyCategory);
 
-        divImagePropertyCategory.appendChild(labelCategory);
-        divImagePropertyCategory.appendChild(select);
+    form.append(divUpload);
+    form.append(divPicSpecs);
+    form.append(divImagePropertyCategory);
 
-        divPicSpecs.appendChild(divImagePropertyTitle);
-        divPicSpecs.appendChild(divImagePropertyCategory);
-
-        FileUpload.appendChild(input);
-        FileUpload.appendChild(spanAdd);
-
-        divUpload.appendChild(spanIcon);
-        divUpload.appendChild(FileUpload);
-        divUpload.appendChild(spanExtensionSize);
-
-        select.appendChild(option);
-        select.appendChild(optionObject);
-        select.appendChild(optionAppartments);
-        select.appendChild(optionHotel);
-
-        form.append(divUpload);
-        form.append(divPicSpecs);
-        form.append(divImagePropertyCategory);
-
-        return form;
+    return form;
 };
 
 /**
  * 
- * Things event 
- * nodeName uploadZone 
- * @returns FileList from the event
+ * Check for valid image parameters
+ * 
+ * @param Things, event 
+ * @param HTML element node, uploadZone 
+ * 
+ * @returns Boolean value
  */
 function controlImage(event, uploadZone) {
     
@@ -443,8 +404,9 @@ function controlImage(event, uploadZone) {
 
     if (
         nodeImage.length > 0 &&
-        nodeImage[0].type === 'image/png' ||
-        nodeImage[0].type === 'image/jpeg' &&
+        (nodeImage[0].type === 'image/png' ||
+        nodeImage[0].type === 'image/jpeg' ||
+        nodeImage[0].type === 'image/jpg') &&
         nodeImage[0].size <= '32000000') {
 
         //fileUpload.classList.add('active');
@@ -454,7 +416,7 @@ function controlImage(event, uploadZone) {
         uploadZone.innerHTML = '';
         uploadZone.appendChild(img);
             
-        return nodeImage;
+        return true;
     };
 
     alert('Image non valide');
@@ -464,27 +426,29 @@ function controlImage(event, uploadZone) {
 
 /**
  * 
- *  nodeName
- *  nodeName 
- *  nodeName
- *  nodeName
- * @param nodeImageOk, a fileList from event of the upload form
- * @returns 
+ * Check the form for valid image parameters
+ * 
+ * @param HTML node element, from the input type file for an image
+ * @param HTML node element, from the input type text for a title
+ * @param HTML node element, from the select for a category
+ * @param HTML node element, from the submit button
+ * 
+ * @returns Boolean value
  */
 function controlForm(inputFile, inputTitle, inputCategory, submitButton, nodeImageOk) {
-console.log(nodeImageOk)
+
     if (nodeImageOk &&
         inputFile.value != '' &&
-        inputTitle.textLength > 0 &&
-        inputCategory.value != '') {
+        inputTitle.value != '' &&
+        inputCategory.selectedIndex != 0) {
 
         submitButton.classList.remove('no-active');
+        
         return true;
 
-    }
+    };
 
     submitButton.classList.add('no-active');
-
     return false;
 };
 
@@ -492,104 +456,73 @@ console.log(nodeImageOk)
  * Display the image preview
  */
 function imagePreview() {
-
-    const inputFile = document.querySelector(".input-file");
-    const inputTitle = document.querySelector(".image-title");
-    const inputCategory = document.querySelector(".image-category");
-    const submitButton = document.querySelector(".valid-btn");
+    const inputFile = document.querySelector('.input-file');
+    const inputTitle = document.querySelector('.image-title');
+    const inputCategory = document.querySelector('.image-category');
+    const submitButton = document.querySelector('.valid-btn');
     const modal = document.querySelector('.modal');
     const uploadZone = document.querySelector('.image-upload');
 
     let formIsOk = false;
     let nodeImageOk = false;
-
+    
     // Add an image's work
     inputFile.addEventListener('change', event => {
         
         nodeImageOk = controlImage(event, uploadZone);
+        
     });
 
     // Add a title to an image of a work
-    inputFile.addEventListener('keyup', event => {
-
+    inputTitle.addEventListener('change', event => {
+        
         let nodeTitle = event.target;
-
-        if (nodeTitle.textLength === 0) {
-            alert('veuillez entrer un titre valide !');
+        
+        if (nodeTitle.value == 0) {
+           // Create an alert message
+            modalAlertMessage('Veuillez entrer un titre valide !');
+            
+            return false;
         };
     });
 
     // Add a category to an image of a work
     inputCategory.addEventListener('change', event => {
         let nodeCategory = event.target;
-
-        if (nodeCategory.value === '') {
-            alert('Veuillez choisir une catégorie !');
+        
+        if (nodeCategory.selectedIndex == 0) {
+            // Create an alert message
+            modalAlertMessage('Veuillez choisir une catégorie !');
+            
+            return false;
         };
     });
 
     // Event change
     modal.addEventListener('change', event => {
-
+        
         formIsOk = controlForm(inputFile, inputTitle, inputCategory, submitButton, nodeImageOk);
+        
     });
 
     // Submit image to upload it
     submitButton.addEventListener('click', event => {
 
         if (formIsOk) {
-
+            // create a form data to upload
             const formData = new FormData();
-            formData.set('image', nodeImageOk[0]);
+            formData.set('image', inputFile.files[0]);
             formData.set('title', inputTitle.value);
             formData.set('category', inputCategory.selectedIndex);
 
             uploadNewWork(formData);
-
         }
         
         else {
-
-            alert('Complétez le formulaire correctement')
-
+            // Create an alert message
+            modalAlertMessage('Veuillez compléter le formulaire !');
         };
     });
-};
-
-/**
- * 
- * Create a form Data of a work and make an HTTP POST request for uploadind a work
- * 
- * @param , formData, image data you need to upload 
- */
-async function uploadNewWork(formData) {
-    const modalBackdrop = document.querySelector('.modal-backdrop');
-    const modal = document.querySelector('.modal');
-    const body = document.querySelector('body')
-    
-    const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
-       
-    if (uploadNewWork) {
-
-        alert('Succès !')
-
-        updateWorks(uploadNewWork);
-        body.removeChild(modalBackdrop);
-        body.removeChild(modal);
-        modalPreviewUpload();
-        imagePreview()
-        arrowBack();
-        
-    } else {
-
-        alert('Une erreur s\'est produite...');
-    
-        body.removeChild(modalBackdrop);
-        body.removeChild(modal);
-        modalPreviewUpload();
-        imagePreview()
-        arrowBack();
-    };
 };
 
 /**
@@ -601,38 +534,17 @@ function displayUploadModal() {
     const modalBackdrop = document.querySelector('.modal-backdrop');
     const modal = document.querySelector('.modal');
 
-    body.removeChild(modal);
-    body.removeChild(modalBackdrop);
-
-    modalPreviewUpload();
+    resetUploadForm(body, modalBackdrop, modal)
+    
+    // Create the upload form
     formUpload();
-    arrowBack();
+    
+    // Create the cross for close the modal
     closeModal();
-    imagePreview();
 };
 
-/**
- * 
- * Update gallery of works after uploading a new work
- * 
- * @param Object uploadNewWork 
- */
-function updateWorks(uploadNewWork) {
-    
-    const node_gallery = document.querySelector('[rel=js-gallery]');
-    
-    let img = document.createElement('img');
-        img.src = uploadNewWork.imageUrl;
-        img.alt = uploadNewWork.title;
 
-    let figcaption = document.createElement('figcaption');
-        figcaption.textContent = uploadNewWork.title;
 
-    let figure = document.createElement('figure');
-        figure.classList.add('work');
-        figure.dataset.category = uploadNewWork.id;
 
-        figure.append(img);
-        figure.append(figcaption);
-        node_gallery.append(figure);
-};
+
+

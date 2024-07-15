@@ -18,13 +18,14 @@
     max-width: 630px;
     min-height: 688px;
     width: 56%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     margin: auto;
     position: fixed;
     box-sizing: border-box;
     text-align: center;
     z-index: 1;
-    top: 10vh;
-    left: 33vw;
 }
 
 .modal-title {
@@ -141,28 +142,33 @@ form {
     position: relative;
 }
 
-
-
 #trash:hover {
     cursor: pointer;
     opacity: 0.5;
     transition: 0.25s all;
 }
 
-.alert {
-    display: none;
-    height: 15vh;
-    position: absolute;
-    top: 60px;
-    width: 100%;
-    z-index: 1;
+.zone-alert {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    padding: 0 20px;
+    min-height: 100px;
+    min-width: 200px;
+    z-index: 2;
     background-color: #FFFFFF;
     border-radius: 10px;
     box-shadow: 12px 12px 2px 1px rgba(0, 0, 0, .2);
     border: 1px solid black;
 }
 
-.zone-text {
+/*.zone-text {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -170,7 +176,7 @@ form {
     height: 100%;
     position: relative;
 
-}
+}*/
 
 .zone-text span {
     font-size: 1rem;
