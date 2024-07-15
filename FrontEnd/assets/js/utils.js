@@ -215,7 +215,7 @@ async function deletedWork(id) {
 };
 
 /**
- * Create the modal with a preview of each work
+ * Create the modal with a upload form
  */
 function modalPreviewUpload() {
 

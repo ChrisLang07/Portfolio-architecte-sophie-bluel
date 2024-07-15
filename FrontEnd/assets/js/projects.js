@@ -158,15 +158,15 @@ function createFilter(filter) {
 
 function resetActiveFilter(activeId) {
 
-const filters = document.querySelectorAll('.filter-tag');
+    const filters = document.querySelectorAll('.filter-tag');
 
-filters.forEach(filter => filter.classList.remove('active'));
+    filters.forEach(filter => filter.classList.remove('active'));
 
-filters.forEach(filter => {
-    if (filter.dataset.category == activeId) {
-        filter.classList.add('active')
-    }
-})
+    filters.forEach(filter => {
+        if (filter.dataset.category == activeId) {
+            filter.classList.add('active')
+        }
+    })
 };
 
 /**

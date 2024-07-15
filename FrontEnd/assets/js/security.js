@@ -47,21 +47,21 @@ function modalAlertMessage(myMessage) {
     const main = document.querySelector('main');
 
     let span = document.createElement("span");
-    span.textContent = myMessage;
+        span.textContent = myMessage;
 
     let button = document.createElement("button");
-    button.setAttribute("type", "button");
-    button.classList.add("validation");
-    button.textContent = "Ok";
+        button.setAttribute("type", "button");
+        button.classList.add("validation");
+        button.textContent = "Ok";
 
     let div = document.createElement("div");
-    div.classList.add("zone-alert");
-    div.style.display = "flex";
+        div.classList.add("zone-alert");
+        div.style.display = "flex";
 
-    div.appendChild(span);
-    div.appendChild(button);
+        div.appendChild(span);
+        div.appendChild(button);
 
-    main.appendChild(div);
+        main.appendChild(div);
     
     button.addEventListener("click", event => {
         
