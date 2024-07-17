@@ -4,6 +4,9 @@ const url_works = "http://localhost:5678/api/works";
 const url_categories = "http://localhost:5678/api/categories";
 const url_deleteWork = "http://localhost:5678/api/works/";
 
+const main = document.querySelector('main');
+const divZoneAlert = document.querySelector('.zone-alert');
+
 /**
  * Make a HTTP GET Request and return an array
  * 
@@ -196,25 +199,6 @@ function closeModal() {
 };
 
 /**
- * Delete a work from works and update gallery/Preview Gallery
- */
-async function deletedWork(id) {
-
-    const deletedWork = await httpDelete(url_deleteWork + id, store.STORE_TOKEN);
-    const previewContent = document.querySelector('.content');
-
-    let figure = node_gallery.querySelector('[data-category="' + id + '"]');
-    let previewToDel = previewContent.querySelector('[data-category="' + id + '"]');
-
-    if (deletedWork) {
-
-        node_gallery.removeChild(figure);
-        previewContent.removeChild(previewToDel);
-
-    };
-};
-
-/**
  * Create the modal with a upload form
  */
 function modalPreviewUpload() {
@@ -391,6 +375,28 @@ function formUpload() {
 
 /**
  * 
+ * Reset the upload form
+ * 
+ * @param HTML node element body 
+ * @param HTML node element modalBackdrop 
+ * @param HTML node element modal 
+ */
+function resetUploadForm(body, modalBackdrop, modal) {
+    body.removeChild(modalBackdrop);
+    body.removeChild(modal);
+        
+    // Create the upload modal
+    modalPreviewUpload();
+    
+    // Create a display zone for an image preview 
+    imagePreview()
+    
+    // Create the modal back arrow
+    arrowBack();
+};
+
+/**
+ * 
  * Check for valid image parameters
  * 
  * @param Things, event 
@@ -403,10 +409,10 @@ function controlImage(event, uploadZone) {
     let nodeImage = event.target.files;
 
     if (
-        nodeImage.length > 0 &&
-        (nodeImage[0].type === 'image/png' ||
-        nodeImage[0].type === 'image/jpeg' ||
-        nodeImage[0].type === 'image/jpg') &&
+        nodeImage.length > 0 
+        &&
+        (nodeImage[0].type === 'image/png' || nodeImage[0].type === 'image/jpeg' || nodeImage[0].type === 'image/jpg')
+        &&
         nodeImage[0].size <= '32000000') {
 
         //fileUpload.classList.add('active');
@@ -418,8 +424,9 @@ function controlImage(event, uploadZone) {
             
         return true;
     };
-
-    alert('Image non valide');
+    let buttonOk = document.createElement('button');
+        buttonOk.textContent = 'Ok';
+    modalAlertMessage('Image non valide !', null, buttonOk);
 
     return false;
 };
@@ -480,7 +487,9 @@ function imagePreview() {
         
         if (nodeTitle.value == 0) {
            // Create an alert message
-            modalAlertMessage('Veuillez entrer un titre valide !');
+            let buttonOk = document.createElement('button');
+                buttonOk.textContent = 'Ok';
+            modalAlertMessage('Veuillez entrer un titre valide !', null, buttonOk);
             
             return false;
         };
@@ -492,7 +501,9 @@ function imagePreview() {
         
         if (nodeCategory.selectedIndex == 0) {
             // Create an alert message
-            modalAlertMessage('Veuillez choisir une catégorie !');
+            let buttonOk = document.createElement('button');
+                buttonOk.textContent = 'Ok';
+            modalAlertMessage('Veuillez choisir une catégorie !', null, buttonOk);
             
             return false;
         };
@@ -520,7 +531,9 @@ function imagePreview() {
         
         else {
             // Create an alert message
-            modalAlertMessage('Veuillez compléter le formulaire !');
+            let buttonOk = document.createElement('button');
+                buttonOk.textContent = 'Ok';
+            modalAlertMessage('Veuillez compléter le formulaire !', null, buttonOk);
         };
     });
 };

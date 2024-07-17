@@ -75,7 +75,6 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
 }
 
 h2{
@@ -175,8 +174,6 @@ nav a {
 	font-weight: 400;
 }
 
-
-
 .menu {
 	display: flex;
 	justify-content: center;
@@ -208,7 +205,6 @@ nav a {
 	background-color: #1D6154;
 	color: white;
 }
-
 
 .gallery {
 	width: 100%;

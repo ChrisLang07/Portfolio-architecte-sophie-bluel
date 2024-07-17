@@ -121,10 +121,6 @@ form {
     margin:auto;
 }
 
-
-
-
-
 .gallery-title {
     font-size: 1.6rem;
     font-weight: 400;
@@ -168,15 +164,11 @@ form {
     border: 1px solid black;
 }
 
-/*.zone-text {
+.action-buttons {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
-    position: relative;
-
-}*/
+    justify-content: space-between;
+    gap: 100px;
+}
 
 .zone-text span {
     font-size: 1rem;
@@ -186,17 +178,13 @@ form {
 
 .validation {
     font-size: 1rem;
-    font-weight: 500;
-    font-family: "Syne";
+    font-weight: 700;
+    padding: 5px 10px;
     background-color: rgba(29, 97, 84, 1);
     color: #FFFFFF;
     border-radius: 10px;
     border: none;
 }
-
-/*.upload-modal {
-    display: none;
-}*/
 
 .arrow-back {
     position:absolute;

@@ -62,8 +62,17 @@ function previewGallery(previewWork) {
         figure.append(img);
 
         spanTrash.addEventListener("click", event => {
-
-            deletedWork(previewWork.dataset.category);
+            let buttonOui = document.createElement('button');
+                buttonOui.textContent = 'Oui';
+                buttonOui.addEventListener('click', event => {
+                    
+                    deletedWork(previewWork.dataset.category);
+                    
+                });
+            let buttonNon = document.createElement('button');
+                buttonNon.textContent = 'Non';
+            
+            modalAlertMessage('Confirmez vous la suppression du projet ?', buttonOui, buttonNon);           
         });
 
     return figure;
@@ -117,6 +126,28 @@ function createWork(work) {
 function fillGallery(works) {
     resetGallery();
     works.forEach(work => createWork(work));
+};
+
+/**
+ * Delete a work from works and update gallery/Preview Gallery
+ */
+async function deletedWork(id) {
+
+    const deletedWork = await httpDelete(url_deleteWork + id, store.STORE_TOKEN);
+    const previewContent = document.querySelector('.content');
+
+    let figure = node_gallery.querySelector('[data-category="' + id + '"]');
+    let previewToDel = previewContent.querySelector('[data-category="' + id + '"]');
+
+    if (deletedWork) {
+
+        node_gallery.removeChild(figure);
+        previewContent.removeChild(previewToDel);
+        
+        let buttonOk = document.createElement('button');
+            buttonOk.textContent = 'Ok';
+        modalAlertMessage('Effacé !', null, buttonOk);
+    };
 };
 
 /**
@@ -178,28 +209,6 @@ node_filters.innerHTML = "";
 
 /**
  * 
- * Reset the upload form
- * 
- * @param HTML node element body 
- * @param HTML node element modalBackdrop 
- * @param HTML node element modal 
- */
-function resetUploadForm(body, modalBackdrop, modal) {
-    body.removeChild(modalBackdrop);
-    body.removeChild(modal);
-        
-    // Create the upload modal
-    modalPreviewUpload();
-    
-    // Create a display zone for an image preview 
-    imagePreview()
-    
-    // Create the modal back arrow
-    arrowBack();
-};
-
-/**
- * 
  * Make an upload of a work
  * 
  * @param , formData, image data you need to upload 
@@ -209,11 +218,13 @@ async function uploadNewWork(formData) {
     const modal = document.querySelector('.modal');
     const body = document.querySelector('body')
     const uploadNewWork = await httpPostImage(url_works, store.STORE_TOKEN, formData);
+   
        
     if (uploadNewWork) {
-
         // Create an alert message for successfully upload
-        modalAlertMessage('Succès !');
+        let buttonOk = document.createElement('button');
+            buttonOk.textContent = 'Ok';
+        modalAlertMessage('Succès !', null, buttonOk);
         
         // Add the upload work to works
         updateWorks(uploadNewWork);
@@ -224,7 +235,9 @@ async function uploadNewWork(formData) {
     } else {
         
         // Create an alert message when an error is occur
-        modalAlertMessage('Une erreur s\'est produite !');
+        let buttonOk = document.createElement('button');
+            buttonOk.textContent = 'Ok';
+        modalAlertMessage('Une erreur s\'est produite !', null, buttonOk);
         
         // Reset the upload form
         resetUploadForm(body, modalBackdrop, modal);

@@ -24,9 +24,9 @@ auth?.addEventListener("submit", async (event) => {
     const response = await httpPostJson(url_login, data, headers);
 
     if (!response.userId) {
-       
-        const errorMessage = "Mauvais E-mail et/ou mot de passe !";
-        modalAlertMessage(errorMessage);
+        let buttonOk = document.createElement('button');
+        buttonOk.textContent = 'Ok';
+        modalAlertMessage("Mauvais E-mail et/ou mot de passe !", buttonOk);
         return;
     };
 
@@ -42,31 +42,48 @@ auth?.addEventListener("submit", async (event) => {
  * 
  * @param String myMessage, the message displayed
  */
-
-function modalAlertMessage(myMessage) {
+function modalAlertMessage(myMessage, buttonOne, buttonTwo) {
     const main = document.querySelector('main');
 
-    let span = document.createElement("span");
+    let span = document.createElement('span');
         span.textContent = myMessage;
 
-    let button = document.createElement("button");
-        button.setAttribute("type", "button");
-        button.classList.add("validation");
-        button.textContent = "Ok";
+    let divButtons = document.createElement('div');
+        divButtons.classList.add('action-buttons');
 
-    let div = document.createElement("div");
-        div.classList.add("zone-alert");
-        div.style.display = "flex";
+    let divZoneAlert = document.createElement('div');
+        divZoneAlert.classList.add('zone-alert');
+        divZoneAlert.style.display = 'flex';
 
-        div.appendChild(span);
-        div.appendChild(button);
+    if (buttonOne) {
+        buttonOne.setAttribute('type', 'button');
+        buttonOne.classList.add('validation')
 
-        main.appendChild(div);
-    
-    button.addEventListener("click", event => {
+        divButtons.appendChild(buttonOne);
+
+        buttonOne.addEventListener('click', event => {
+            
+            main.removeChild(divZoneAlert);
+        })
         
-        main.removeChild(div);
-    });
+    };
+
+    if (buttonTwo) {
+        buttonTwo.setAttribute('type', 'button');
+        buttonTwo.classList.add('validation')
+
+        divButtons.appendChild(buttonTwo);
+
+        buttonTwo.addEventListener('click', event => {
+                    
+            main.removeChild(divZoneAlert);
+        });
+    };      
+
+    
+    divZoneAlert.appendChild(span);
+    divZoneAlert.appendChild(divButtons);
+    main.appendChild(divZoneAlert);
 };
 
 /**
